@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Vite cache (sometimes appears at project root, not just node_modules)
+.vite
+
+# Claude Code per-user state
+.claude/settings.local.json
+.claude/worktrees/
