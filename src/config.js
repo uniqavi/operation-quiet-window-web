@@ -61,6 +61,13 @@ export const CAMERA = {
   wheelZoomFactor: 1.12,
 };
 
+// Auto-scroller configuration
+export const SCROLL = {
+  baseSpeed: 40,      // Starting scroll speed (px/s)
+  maxSpeed: 160,      // Max scroll speed
+  accel: 1.2,         // Acceleration per second
+};
+
 // Gaze meter + cursor enforcer
 export const GAZE = {
   raisePerSec: 22,
@@ -171,6 +178,7 @@ export const PICKUPS = {
   cookieGrowDuration: 0.8,
   pickRadiusMult: 0.32,
   crumbGrowth: 5,
+  totalDocsToEscape: 5,
 };
 
 // Visual atmospherics

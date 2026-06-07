@@ -3,7 +3,6 @@
 // by GameScene). Phaser-free.
 
 import { PH, AGENTS, DAMAGE } from '../../config.js';
-import { commentSlots } from '../layout.js';
 import { aabb, playerBox, dist } from '../physics.js';
 import { beep, noise } from '../audio.js';
 import { drawComment } from '../draw.js';
@@ -13,7 +12,7 @@ const T = AGENTS.fallingComment;
 
 export function update(agent, dt, state) {
   const p = state.player;
-  const slot = commentSlots[agent.commentIdx];
+  const slot = state.commentSlots[agent.commentIdx];
   const cx = slot.x + slot.w / 2;
   const cy = slot.y + slot.h / 2;
 
@@ -60,7 +59,7 @@ export function isAgentSlot(agent, idx) {
 // During 'rumbling', also draws a warning shadow at the projected impact
 // zone below it so the player knows where it will hit.
 export function drawAgent(ctx, agent, state) {
-  const slot = commentSlots[agent.commentIdx];
+  const slot = state.commentSlots[agent.commentIdx];
 
   // TELEGRAPH: red flashing border + impact shadow during rumble phase
   if (agent.state === 'rumbling') {

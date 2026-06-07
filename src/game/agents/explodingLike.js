@@ -12,8 +12,9 @@ const T = AGENTS.explodingLike;
 export function update(agent, dt, state) {
   const p = state.player;
   const layout = state.layout;
-  const cx = layout.likeBtn.x + layout.likeBtn.w / 2;
-  const cy = layout.likeBtn.y + layout.likeBtn.h / 2;
+  const lb = state.layout.likeBtn;
+  const cx = agent.x !== undefined ? agent.x : lb.x + lb.w / 2;
+  const cy = agent.y !== undefined ? agent.y : lb.y + lb.h / 2;
 
   if (agent.state === 'idle') {
     if (dist(p.x, p.y, cx, cy) < agent.triggerR) {
@@ -76,8 +77,8 @@ export function drawButton(ctx, agent, state) {
   const charging = agent.state === 'charging';
   const exploded = agent.state === 'exploded';
   const pulse = charging ? 1 + Math.sin(state.time * 30) * 0.05 : 1;
-  const cx = lb.x + lb.w / 2;
-  const cy = lb.y + lb.h / 2;
+  const cx = agent.x !== undefined ? agent.x : lb.x + lb.w / 2;
+  const cy = agent.y !== undefined ? agent.y : lb.y + lb.h / 2;
 
   // TELEGRAPH: visible charge ring that fills as the button approaches detonation.
   // Outer radius grows + thickens; gives the player a clear "back off NOW" cue.

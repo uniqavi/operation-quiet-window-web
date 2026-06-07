@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
-import { PW, PH, PLAYER, CAMERA, GAZE, PICKUPS, RENDER, DIFFICULTY, L1, SCAN } from '../config.js';
+import { PW, PH, PLAYER, CAMERA, GAZE, PICKUPS, RENDER, DIFFICULTY, L1, SCAN, SCROLL } from '../config.js';
 import { createState, resetState } from '../game/state.js';
-import { recSlots, commentSlots } from '../game/layout.js';
 import { dist } from '../game/physics.js';
 import { initAudio, beep, noise } from '../game/audio.js';
 import { drawHandRect, drawRecCard, drawComment } from '../game/draw.js';
@@ -437,10 +436,7 @@ export default class GameScene extends Phaser.Scene {
     if (this.shouldShowTip('docs') && state.time > 8 && state.docsCollected === 0) {
       this.showTip(ONBOARDING_TIPS[1]); return;
     }
-    if (this.shouldShowTip('cookies') && state.docsCollected === state.docs.length && !state.cookieCollected) {
-      this.showTip(ONBOARDING_TIPS[2]); return;
-    }
-    if (this.shouldShowTip('exfil') && state.docsCollected === state.docs.length && state.cookieCollected) {
+    if (this.shouldShowTip('exfil') && state.docsCollected >= PICKUPS.totalDocsToEscape) {
       this.showTip(ONBOARDING_TIPS[3]); return;
     }
   }
@@ -690,7 +686,7 @@ export default class GameScene extends Phaser.Scene {
       document.getElementById('stat-survival').textContent =
         state.stats.damageTaken + ' size lost · ' + state.stats.hitsReceived + ' hit' + (state.stats.hitsReceived === 1 ? '' : 's');
     }
-    document.getElementById('stat-docs').textContent = state.docsCollected + ' / ' + state.docs.length;
+    document.getElementById('stat-docs').textContent = state.docsCollected + ' / ' + Math.max(state.docsCollected, PICKUPS.totalDocsToEscape);
 
     // Stars — only awarded on win. On loss, leave them empty (no misleading 3 stars).
     document.getElementById('stat-time-stars').innerHTML     = won ? this.starsHtml(grade.timeStars)     : '';
@@ -797,6 +793,8 @@ export default class GameScene extends Phaser.Scene {
     const state = this.state;
     const p = state.player;
     const c = state.cam;
+    const viewW = this.VW / c.zoom;
+    const viewH = this.VH / c.zoom;
 
     // Player movement
     const speedMult = 1.5 - (p.size / 200) * 0.7;
@@ -813,19 +811,32 @@ export default class GameScene extends Phaser.Scene {
     }
     p.x += vx * speed * dt;
     p.y += vy * speed * dt;
+    // Determine if we should stop scrolling
+    const finished = state.docsCollected >= PICKUPS.totalDocsToEscape;
+    const scrollSpeed = finished ? 0 : Math.min(SCROLL.maxSpeed, SCROLL.baseSpeed + SCROLL.accel * state.time);
+    
+    // Auto-scroll camera
+    c.x += ((p.x - viewW / 2) - c.x) * Math.min(1, dt * CAMERA.followLerp);
+    c.y += scrollSpeed * dt;
+    c.x = PW > viewW ? Phaser.Math.Clamp(c.x, 0, PW - viewW) : (PW - viewW) / 2;
+
+    // Clamp player to camera bounds
     p.x = Phaser.Math.Clamp(p.x, p.size / 2, PW - p.size / 2);
-    p.y = Phaser.Math.Clamp(p.y, p.size * 0.4, PH - p.size * 0.4);
+    p.y = Phaser.Math.Clamp(p.y, c.y + p.size * 0.4, c.y + viewH - p.size * 0.4);
+
     if (p.invuln > 0) p.invuln -= dt;
     if (p.hitFlash > 0) p.hitFlash -= dt;
     if (p.growT > 0) p.growT -= dt;
 
-    // Camera follow
-    const viewW = this.VW / c.zoom;
-    const viewH = this.VH / c.zoom;
-    c.x += ((p.x - viewW / 2) - c.x) * Math.min(1, dt * CAMERA.followLerp);
-    c.y += ((p.y - viewH / 2) - c.y) * Math.min(1, dt * CAMERA.followLerp);
-    c.x = PW > viewW ? Phaser.Math.Clamp(c.x, 0, PW - viewW) : (PW - viewW) / 2;
-    c.y = PH > viewH ? Phaser.Math.Clamp(c.y, 0, PH - viewH) : (PH - viewH) / 2;
+    // Infinite Spawning Logic
+    if (!finished && c.y + viewH > state.generatedY - 500) {
+      this.generateNextChunk();
+    } else if (finished && state.propaganda.length === 0) {
+      this.spawnFinalEscape();
+    }
+    
+    // Garbage Collection
+    this.garbageCollect(c.y);
 
     // Propaganda dragging
     for (const prop of state.propaganda) {
@@ -841,7 +852,7 @@ export default class GameScene extends Phaser.Scene {
     // enough off its home spot, the hole behind it is uncovered. Latches, and
     // plays the intel memo once (you read what they were hiding as you open
     // the passage). Gaze/cursor is disabled in L1, so no gaze accumulation.
-    {
+    if (state.propaganda.length > 0) {
       const prop = state.propaganda[0];
       const movedAway = Math.hypot(prop.x - prop.homeX, prop.y - prop.homeY) > 70;
       if (movedAway && !prop.revealed) {
@@ -933,12 +944,17 @@ export default class GameScene extends Phaser.Scene {
     // Sweep the window across an element to cover it; once enough of its width
     // has been swept, the reveal latches persistent. Free + optional — does
     // not gate the win.
+    state.activeScanFrag = null;
     {
       const s = p.size, ph = s * 0.75;
       const px = p.x - s / 2, py = p.y - ph / 2;
       for (const f of state.scanFragments) {
-        if (f.scanned) continue;
+        if (f.scanned) {
+          if (this.windowOverlaps(f)) state.activeScanFrag = f;
+          continue;
+        }
         if (this.windowOverlaps(f)) {
+          state.activeScanFrag = f;
           const { frac, gained } = markScanCoverage(f, px, s, this.ctx);
           f.progress = frac;
           if (gained > 0 && Math.random() < 0.5) beep(1500 + Math.random() * 600, 0.004, 'square', 0.012);
@@ -973,7 +989,7 @@ export default class GameScene extends Phaser.Scene {
     // collected. Replaces the old "reach SUBSCRIBE" exit. Starts the malware
     // install → short-circuit → glitch-wipe sequence, which flips status to
     // 'won' and runs the results overlay.
-    if (state.docsCollected === state.docs.length && state.cookieCollected) {
+    if (state.docsCollected >= PICKUPS.totalDocsToEscape && state.propaganda.length > 0) {
       const prop = state.propaganda[0];
       const hole = state.truth[0];
       if (prop.revealed &&
@@ -987,6 +1003,67 @@ export default class GameScene extends Phaser.Scene {
         this.beginEndSequence();
       }
     }
+  }
+
+  generateNextChunk() {
+    const state = this.state;
+    const y = state.generatedY;
+    for (let i = 0; i < 4; i++) state.commentSlots.push({ x: 24, y: y + i * 100, w: 580, h: 88, idx: state.commentSlots.length });
+    for (let i = 0; i < 4; i++) state.recSlots.push({ x: 620, y: y + i * 96, w: 320, h: 86, idx: state.recSlots.length });
+
+    if (Math.random() < 0.8 && state.docs.length < PICKUPS.totalDocsToEscape + 3) {
+      state.docs.push({ x: 100 + Math.random() * 400, y: y + Math.random() * 300, r: 13, taken: false, takeT: 0 });
+    }
+    if (Math.random() < 0.6) {
+      state.looseCookies.push({ x: 100 + Math.random() * 700, y: y + Math.random() * 300, r: 6, taken: false, takeT: 0 });
+    }
+    state.generatedY += 400;
+  }
+
+  spawnFinalEscape() {
+    const state = this.state;
+    const y = state.generatedY + 200;
+    const slot = { x: 24, y: y, w: 580, h: 88 };
+    state.propaganda = [{
+      x: slot.x, y: slot.y, w: slot.w, h: slot.h,
+      homeX: slot.x, homeY: slot.y,
+      dragging: false, dox: 0, doy: 0, revealed: false,
+    }];
+    state.truth = [{ x: slot.x, y: slot.y, w: slot.w, h: slot.h }];
+    state.generatedY += 1000;
+  }
+
+  garbageCollect(camY) {
+    const state = this.state;
+    const cutoff = camY - 500;
+    
+    state.agents.chasingRecs.forEach(a => {
+      if (a.y < cutoff) {
+        const validSlots = state.recSlots.filter(s => s.y > camY + this.VH + 100);
+        if (validSlots.length > 0) {
+          const slot = validSlots[Math.floor(Math.random() * validSlots.length)];
+          a.x = slot.x + slot.w/2; a.y = slot.y + slot.h/2; a.recIdx = slot.idx; a.state = 'idle';
+        }
+      }
+    });
+
+    const fc = state.agents.fallingComment;
+    if (fc.y < cutoff) {
+      const validSlots = state.commentSlots.filter(s => s.y > camY + this.VH + 200);
+      if (validSlots.length > 0) {
+        const slot = validSlots[Math.floor(Math.random() * validSlots.length)];
+        fc.x = slot.x; fc.y = slot.y; fc.commentIdx = slot.idx; fc.state = 'idle';
+      }
+    }
+
+    const el = state.agents.explodingLike;
+    if (el.y < cutoff) { el.y = camY + this.VH + 300 + Math.random() * 300; el.x = 40 + Math.random() * 100; el.state = 'idle'; }
+
+    const cc = state.agents.crushingCookie;
+    if (cc.y < cutoff) { cc.y = camY + this.VH + 500 + Math.random() * 500; state.layout.cookie.y = cc.y; cc.state = 'idle'; }
+
+    const gs = state.agents.gunShooter;
+    if (gs.y < cutoff) { gs.y = camY + this.VH + 200 + Math.random() * 400; gs.x = 800 + Math.random() * 100; gs.state = 'idle'; }
   }
 
   // Broken-wall hole behind the suspicious comment — the level's escape
@@ -1208,8 +1285,8 @@ export default class GameScene extends Phaser.Scene {
     this.drawScanFragments(ctx);
 
     // sidebar recs — empty slot if a chasing rec is currently away from it
-    for (let i = 0; i < recSlots.length; i++) {
-      const slot = recSlots[i];
+    for (let i = 0; i < state.recSlots.length; i++) {
+      const slot = state.recSlots[i];
       if (ChasingRecs.isAgentSlot(state.agents.chasingRecs, i)) {
         ChasingRecs.drawEmptySlot(ctx, slot);
       } else {
@@ -1220,10 +1297,10 @@ export default class GameScene extends Phaser.Scene {
 
     // comments — skip the falling-comment slot (drawn separately below) and
     // slot 2, which is the suspicious (draggable) comment + hole behind it.
-    for (let i = 0; i < commentSlots.length; i++) {
-      if (i === 2) continue;
-      if (FallingComment.isAgentSlot(state.agents.fallingComment, i)) continue;
-      const slot = commentSlots[i];
+    for (let i = 0; i < state.commentSlots.length; i++) {
+      // the hole and propaganda sit in slot 2; normal comments skip it unless
+      // it's the "propaganda" object. (We draw that one below).
+      const slot = state.commentSlots[i];
       drawComment(ctx, slot.x, slot.y, slot.w, slot.h, i, false, null);
     }
     if (state.agents.fallingComment.state !== 'idle') {
@@ -1234,11 +1311,13 @@ export default class GameScene extends Phaser.Scene {
     // once the player starts moving the comment, so it stays concealed until
     // uncovered. The comment is drawn AFTER, so when home it covers the hole.
     {
-      const prop = state.propaganda[0];
-      const hole = state.truth[0];
-      if (prop.dragging || prop.revealed) {
-        const ready = state.docsCollected === state.docs.length && state.cookieCollected;
-        this.drawHole(ctx, hole, ready);
+      if (state.propaganda.length > 0) {
+        const prop = state.propaganda[0];
+        const hole = state.truth[0];
+        if (prop.dragging || prop.revealed) {
+          const ready = state.docsCollected >= PICKUPS.totalDocsToEscape;
+          this.drawHole(ctx, hole, ready);
+        }
       }
     }
 
@@ -1504,6 +1583,19 @@ export default class GameScene extends Phaser.Scene {
     // under the player chrome, so it reads as truth seen through the window.
     this.drawScanXray(ctx);
 
+    if (state.activeScanFrag && !state.activeScanFrag.scanned) {
+      const f = state.activeScanFrag;
+      const pct = Math.floor((f.progress / SCAN.coverThreshold) * 100);
+      const text = pct === 0 ? 'Initiating scan...' : (pct >= 100 ? 'Scan Complete.' : `Scanning: ${pct}%`);
+      ctx.save();
+      const p = state.player;
+      ctx.fillStyle = '#E63946';
+      ctx.font = 'bold 12px ui-monospace, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(text, p.x, p.y - p.size * 0.4 - 15);
+      ctx.restore();
+    }
+
     // player
     {
       const p = state.player;
@@ -1598,22 +1690,21 @@ export default class GameScene extends Phaser.Scene {
     this.hud.gaze.style.width = state.gaze + '%';
     this.hud.gaze.style.background =
       state.gaze < 50 ? '#2D8659' : state.gaze < 80 ? '#F4D35E' : '#E63946';
-    this.hud.docs.textContent = state.docsCollected + ' / ' + state.docs.length;
+    this.hud.docs.textContent = state.docsCollected + ' / ' + Math.max(state.docsCollected, PICKUPS.totalDocsToEscape);
     this.hud.cookie.textContent = state.cookieCollected ? 'YES' : 'no';
     this.hud.cookie.style.color = state.cookieCollected ? '#2D8659' : '#f5f5f5';
     this.hud.zoom.textContent = Math.round((state.cam.zoom / state.cam.baseZoom) * 100) + '%';
 
     const gun = state.agents.gunShooter;
-    const prop = state.propaganda[0];
-    const allDone = state.docsCollected === state.docs.length && state.cookieCollected;
+    const prop = state.propaganda.length > 0 ? state.propaganda[0] : null;
+    const allDone = state.docsCollected >= PICKUPS.totalDocsToEscape;
     if (gun.state === 'aiming') this.hud.hint.textContent = '⚠ the avatar has a gun. of course it does. RUN AT IT';
     else if (gun.state === 'awakening') this.hud.hint.textContent = '⚠ avatar waking up. this is bad';
     else if (state.cursor) this.hud.hint.textContent = 'cursor is on you. break line of sight';
-    else if (allDone && prop.revealed) this.hud.hint.textContent = 'everything\'s yours. slip through the hole to escape.';
-    else if (allDone) this.hud.hint.textContent = 'drag the grey comment aside — there\'s a way out behind it.';
-    else if (state.docsCollected === state.docs.length && !state.cookieCollected)
-      this.hud.hint.textContent = 'docs got. now the cookies';
-    else this.hud.hint.textContent = (state.docs.length - state.docsCollected) + ' more docs to grab';
+    else if (allDone && prop && prop.revealed) this.hud.hint.textContent = 'everything\'s yours. slip through the hole to escape.';
+    else if (allDone && prop) this.hud.hint.textContent = 'drag the grey comment aside — there\'s a way out behind it.';
+    else if (allDone) this.hud.hint.textContent = 'All intel secured. FIND THE EXIT';
+    else this.hud.hint.textContent = (PICKUPS.totalDocsToEscape - state.docsCollected) + ' more docs to grab';
   }
 
 }
