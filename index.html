@@ -10,25 +10,22 @@
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body class="menu-mode">
-    <!-- Fixed 1920x1080 design surface. JS scales it to fit the browser window
-         while preserving aspect ratio — the rest of the layout uses logical px. -->
     <div class="viewport" id="viewport">
       <div class="frame">
         <div class="tabs" id="browser-tabs">
-          <div class="tab active" data-tab="youtube"><span class="dot">●</span>totallynormaltube.gov.??<span class="x">×</span></div>
-          <div class="tab locked" data-tab="spygram" data-tooltip="ACCESS DENIED — finish level 1 first"><span class="lock">🔒</span>???<span class="x">×</span></div>
-          <div class="tab locked" data-tab="unknown" data-tooltip="ACCESS DENIED — still locked"><span class="lock">🔒</span>???<span class="x">×</span></div>
+          <div class="tab active" data-tab="youtube"><span class="dot">●</span>HUSH_PIPELINE.gov.??<span class="x">×</span></div>
+          <div class="tab locked" data-tab="spygram" data-tooltip="ACCESS DENIED — clear sector 1 first"><span class="lock">🔒</span>???<span class="x">×</span></div>
+          <div class="tab locked" data-tab="unknown" data-tooltip="ACCESS DENIED — encryption locked"><span class="lock">🔒</span>???<span class="x">×</span></div>
           <div class="tab plus" style="color:#666">+</div>
         </div>
         <div class="urlbar">
           <span class="nav">←</span><span class="nav">→</span><span class="nav">↻</span>
-          <div class="url" id="browser-url">https://totallynormaltube.gov.??/watch?v=truth</div>
+          <div class="url" id="browser-url">https://hush_system_node.gov.??/watch?v=intercept</div>
         </div>
         <div class="canvas-wrap">
           <div id="game"></div>
           <canvas id="oqw"></canvas>
 
-          <!-- ===== ONBOARDING TOOLTIP (centered modal, pauses game) ===== -->
           <div class="onboarding-tip hidden" id="onboarding-tip">
             <div class="tip-card">
               <div class="tip-row">
@@ -39,7 +36,6 @@
             </div>
           </div>
 
-          <!-- ===== MALWARE INSTALL / SHORT-CIRCUIT SEQUENCE ===== -->
           <div class="end-sequence hidden" id="end-sequence">
             <div class="malware-install" id="malware-install">
               <div class="malware-frame">
@@ -52,7 +48,6 @@
             <div class="glitch-sweep" id="glitch-sweep"></div>
           </div>
 
-          <!-- ===== INTEL DIALOG (triggered when player uncovers a hidden memo) ===== -->
           <div class="intel-dialog hidden" id="intel-dialog">
             <div class="intel-frame">
               <div class="intel-tag" id="intel-speaker">[ INTERCEPT — CLASSIFIED // L4 ]</div>
@@ -61,57 +56,46 @@
             </div>
           </div>
 
-          <!-- ===== TUTORIAL DIALOGUE (Toto narrates the tutorial) ===== -->
           <div class="tutorial-dialog hidden" id="tutorial-dialog">
-            <img class="tutorial-portrait" id="tutorial-portrait" src="/portraits/toto.png" alt="" onerror="this.style.display='none'" />
             <div class="tutorial-body">
-              <div class="tutorial-speaker" id="tutorial-speaker">TOTO</div>
+              <div class="tutorial-speaker" id="tutorial-speaker">DAEMON</div>
               <div class="tutorial-line" id="tutorial-line"></div>
-              <div class="tutorial-hint" id="tutorial-hint">▸ keep moving</div>
+              <div class="tutorial-hint" id="tutorial-hint">▸ matrix active</div>
             </div>
-            <button class="tutorial-skip" id="tutorial-skip">SKIP TUTORIAL ↗</button>
+            <button class="tutorial-skip" id="tutorial-skip">SKIP CALIBRATION ↗</button>
           </div>
 
-          <!-- ===== POST-MISSION OVERLAY (shown after L1 win — minimal, no big results screen) ===== -->
           <div class="post-mission-banner hidden" id="post-mission-banner">
             <span class="pm-tag">[ MALWARE PLANTED ]</span>
-            <span class="pm-text">page is yours. Toto just unlocked a new tab → <span class="pm-tab">spygram.hush</span>. click it when you're ready.</span>
-            <span class="pm-hint"><kbd>ESC</kbd> menu · <kbd>R</kbd> again</span>
+            <span class="pm-text">Target node secured. Security bypass established -> <span class="pm-tab">spygram.hush</span>.</span>
+            <span class="pm-hint"><kbd>ESC</kbd> menu · <kbd>R</kbd> retry</span>
           </div>
 
-          <!-- ===== MAIN MENU ===== -->
           <div class="main-menu" id="main-menu">
             <div class="dark-room">
               <canvas class="menu-fx-canvas" id="menu-fx-canvas-main"></canvas>
-              <div class="fx-projection-flicker"></div>
-              <div class="fx-monitor-glow"></div>
-              <div class="fx-lamp-glow"></div>
-              <div class="fx-led"></div>
+              <div class="fx-crt-scanlines"></div>
             </div>
             <div class="menu-overlay ink-layer" role="region" aria-label="Main menu">
-              <!-- Status bar at the top of the projection -->
               <div class="status">
-                <div class="status-left">[OPERATIONAL STATUS: STANDBY]</div>
+                <div class="status-left">[SYSTEM STATUS: ACTIVE_滲透]</div>
                 <div class="status-right">[DATE: 03.11.2039]</div>
               </div>
 
-              <!-- Title -->
               <h1 class="menu-title">
                 <span class="row">Operation</span>
                 <span class="row">Quiet Window</span>
               </h1>
 
-              <!-- Classification tagline -->
               <div class="tagline">
-                <span class="tag-chip">[DEEP-COVER OPS]</span>
-                <span>TIER-IV CLEARANCE /</span>
-                <span class="tag-chip">[ACTIVE HUSH PROTOCOL]</span>
+                <span class="tag-chip">[SYSTEM_DAEMON]</span>
+                <span>CORE CLEARANCE TIER-IV /</span>
+                <span class="tag-chip">[ACTIVE INFILTRATION]</span>
               </div>
 
-              <!-- Buttons -->
               <nav class="menu-buttons" aria-label="Main">
                 <button class="menu-btn" type="button" id="btn-start">
-                  <span class="label"><span class="br">[</span>START NEW MISSION<span class="br">]</span></span>
+                  <span class="label"><span class="br">[</span>INITIALIZE LINK MATRIX<span class="br">]</span></span>
                   <span class="chev">&rsaquo;</span>
                   <span class="icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
@@ -123,7 +107,7 @@
                 </button>
 
                 <button class="menu-btn" type="button" id="btn-settings">
-                  <span class="label"><span class="br">[</span>SYSTEM SETTINGS / PROTOCOLS<span class="br">]</span></span>
+                  <span class="label"><span class="br">[</span>SYSTEM CONFIG / TUNING<span class="br">]</span></span>
                   <span class="chev" style="visibility:hidden">&rsaquo;</span>
                   <span class="icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -133,7 +117,7 @@
                 </button>
 
                 <button class="menu-btn" type="button" id="btn-help">
-                  <span class="label"><span class="br">[</span>OPERATIONAL HELP / INTEL<span class="br">]</span></span>
+                  <span class="label"><span class="br">[</span>CORE CORE MATRIX INTEL<span class="br">]</span></span>
                   <span class="chev" style="visibility:hidden">&rsaquo;</span>
                   <span class="icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -144,66 +128,56 @@
                 </button>
               </nav>
 
-              <!-- Footer -->
-              <div class="ink-footer">OPS-TERM v1.4</div>
-              <div class="ink-glyphs">. . .</div>
+              <div class="ink-footer">HUSH_OS KERNEL v4.1</div>
+              <div class="ink-glyphs">_SYS_OK</div>
             </div>
           </div>
 
-          <!-- ===== DIFFICULTY SELECT (after pressing START) ===== -->
           <div class="diff-menu hidden" id="diff-menu">
             <div class="dark-room">
               <canvas class="menu-fx-canvas" id="menu-fx-canvas-diff"></canvas>
-              <div class="fx-projection-flicker"></div>
-              <div class="fx-monitor-glow"></div>
-              <div class="fx-lamp-glow"></div>
-              <div class="fx-led"></div>
+              <div class="fx-crt-scanlines"></div>
             </div>
             <div class="diff-overlay ink-layer" role="region" aria-label="Mission configuration">
-              <!-- Status bar -->
               <div class="status">
-                <div class="status-left">[MISSION CONFIG: PENDING]</div>
+                <div class="status-left">[PROFILING BUFFER: LOADING]</div>
                 <div class="status-right">[CLEARANCE: TIER-IV]</div>
               </div>
 
-              <!-- Title -->
               <h1 class="menu-title">
                 <span class="row">Threat</span>
-                <span class="row">Profile</span>
+                <span class="row">Parameters</span>
               </h1>
 
-              <!-- Tagline -->
               <div class="tagline">
                 <span class="tag-chip">[CALIBRATION REQUIRED]</span>
-                <span>SELECT MISSION PARAMETERS</span>
+                <span>SELECT DATA WAVE DENSITY</span>
               </div>
 
-              <!-- Three difficulty cards -->
               <div class="diff-cards">
                 <button class="diff-card" data-diff="easy">
-                  <span class="diff-level"><span class="br">[</span>EASY<span class="br">]</span></span>
+                  <span class="diff-level"><span class="br">[</span>LOW_DENSITY<span class="br">]</span></span>
                   <span class="diff-stars">▸</span>
-                  <span class="diff-desc">Slow agents. Gentle damage. For first runs.</span>
+                  <span class="diff-desc">Gentle data stream latency. For first testing loops.</span>
                 </button>
                 <button class="diff-card" data-diff="normal">
-                  <span class="diff-level"><span class="br">[</span>NORMAL<span class="br">]</span></span>
+                  <span class="diff-level"><span class="br">[</span>STANDARD<span class="br">]</span></span>
                   <span class="diff-stars">▸▸</span>
-                  <span class="diff-desc">As designed. Recommended.</span>
+                  <span class="diff-desc">Optimal operation environment parameters.</span>
                 </button>
                 <button class="diff-card" data-diff="hard">
-                  <span class="diff-level"><span class="br">[</span>HARD<span class="br">]</span></span>
+                  <span class="diff-level"><span class="br">[</span>OVERLOAD<span class="br">]</span></span>
                   <span class="diff-stars">▸▸▸</span>
-                  <span class="diff-desc">Faster. Deadlier. For practiced infiltrators.</span>
+                  <span class="diff-desc">Hyper speed packets. Highly lethal defense algorithms.</span>
                 </button>
               </div>
 
-              <!-- Action buttons -->
               <div class="diff-actions">
                 <button class="menu-btn ghost" type="button" id="diff-back">
                   <span class="label"><span class="br">[</span>◀ BACK<span class="br">]</span></span>
                 </button>
                 <button class="menu-btn" type="button" id="diff-confirm" disabled>
-                  <span class="label"><span class="br">[</span>BEGIN INFILTRATION<span class="br">]</span></span>
+                  <span class="label"><span class="br">[</span>BEGIN LINK MATRIX<span class="br">]</span></span>
                   <span class="chev">&rsaquo;</span>
                   <span class="icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -214,42 +188,40 @@
                 </button>
               </div>
 
-              <!-- Footer -->
-              <div class="ink-footer">OPS-TERM v1.4 · DIFF.SEL</div>
-              <div class="ink-glyphs">. . .</div>
+              <div class="ink-footer">HUSH_OS CONFIG</div>
+              <div class="ink-glyphs">...</div>
             </div>
           </div>
 
-          <!-- ===== NAME PROMPT (after BEGIN INFILTRATION, before cutscene) ===== -->
           <div class="modal hidden" id="name-prompt">
             <div class="modal-panel ink-layer" role="dialog" aria-label="Codename">
               <div class="status">
-                <div class="status-left">[OPERATIVE REGISTRATION]</div>
-                <div class="status-right">[ENCRYPTED CHANNEL]</div>
+                <div class="status-left">[PROXY ROUTING NODE SETTING]</div>
+                <div class="status-right">[ENCRYPTED CONSOLE]</div>
               </div>
 
               <h1 class="menu-title">
-                <span class="row">Identify</span>
-                <span class="row">Yourself</span>
+                <span class="row">Assign</span>
+                <span class="row">Target Seed</span>
               </h1>
 
               <div class="tagline">
-                <span class="tag-chip">[CODENAME REQUIRED]</span>
-                <span>WHAT SHOULD TOTO CALL YOU?</span>
+                <span class="tag-chip">[SEED_REQUIRED]</span>
+                <span>INPUT OPERATION TARGET SIGNATURE SIGN</span>
               </div>
 
               <div class="name-row">
                 <input type="text" id="name-input" maxlength="16" autocomplete="off"
-                       spellcheck="false" placeholder="enter codename..." />
-                <div class="name-note" id="name-note">▸ type a codename to continue</div>
+                       spellcheck="false" placeholder="NODE_0x7F..." />
+                <div class="name-note" id="name-note">▸ input node signature to register</div>
               </div>
 
               <div class="diff-actions">
                 <button class="menu-btn ghost" type="button" id="name-back">
-                  <span class="label"><span class="br">[</span>◀ BACK<span class="br">]</span></span>
+                  <span class="label"><span class="br">[</span>◀ ABORT<span class="br">]</span></span>
                 </button>
                 <button class="menu-btn" type="button" id="name-confirm" disabled>
-                  <span class="label"><span class="br">[</span>CONFIRM<span class="br">]</span></span>
+                  <span class="label"><span class="br">[</span>AUTHORIZE NODE<span class="br">]</span></span>
                   <span class="chev">&rsaquo;</span>
                   <span class="icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -260,67 +232,56 @@
                 </button>
               </div>
 
-              <div class="ink-footer">OPS-TERM v1.4 · ID.REG</div>
+              <div class="ink-footer">HUSH_OS AUTH.REG</div>
               <div class="ink-glyphs">. . .</div>
             </div>
           </div>
 
-          <!-- ===== INTRO CUTSCENE ===== -->
           <div class="intro hidden" id="intro">
             <div class="dark-room">
               <canvas class="menu-fx-canvas" id="menu-fx-canvas-intro"></canvas>
-              <div class="fx-projection-flicker"></div>
-              <div class="fx-monitor-glow"></div>
-              <div class="fx-lamp-glow"></div>
-              <div class="fx-led"></div>
+              <div class="fx-crt-scanlines"></div>
             </div>
             <div class="dialogue">
-              <img class="dialogue-portrait" id="dialogue-portrait" alt="" />
               <div class="dialogue-body">
                 <div class="dialogue-speaker" id="dialogue-speaker"></div>
                 <div class="dialogue-line" id="dialogue-line"></div>
-                <div class="dialogue-hint" id="dialogue-hint">▸ click or press SPACE to continue</div>
+                <div class="dialogue-hint" id="dialogue-hint">▸ press SPACE to continue</div>
               </div>
-              <button id="intro-skip" class="dialogue-skip-btn">SKIP LOG ↗</button>
+              <button id="intro-skip" class="dialogue-skip-btn">SKIP INITIALIZATION ↗</button>
             </div>
           </div>
 
-          <!-- ===== SETTINGS MODAL ===== -->
           <div class="modal hidden" id="settings-modal">
             <div class="modal-panel ink-layer" role="dialog" aria-label="Settings">
-              <!-- Status bar -->
               <div class="status">
-                <div class="status-left">[CONFIG: SYSTEM]</div>
-                <div class="status-right">[USER PREFERENCES]</div>
+                <div class="status-left">[CONFIG: CORE_SYS]</div>
+                <div class="status-right">[PREFERENCES]</div>
               </div>
 
-              <!-- Title -->
               <h1 class="menu-title">
                 <span class="row">System</span>
                 <span class="row">Config</span>
               </h1>
 
-              <!-- Tagline -->
               <div class="tagline">
-                <span class="tag-chip">[LOCAL SETTINGS]</span>
-                <span>SET PARAMETERS</span>
+                <span class="tag-chip">[LOCAL TELEMETRY]</span>
+                <span>SET ATTRIBUTES</span>
               </div>
 
-              <!-- Settings rows -->
               <div class="settings-rows">
                 <div class="setting-row">
-                  <span class="setting-label">[ AUDIO ]</span>
+                  <span class="setting-label">[ PULSE AUDIO ]</span>
                   <div class="diff-options">
-                    <button class="diff-btn" data-audio="on">[ ON ]</button>
-                    <button class="diff-btn" data-audio="off">[ MUTE ]</button>
+                    <button class="diff-btn" data-audio="on">[ RUNNING ]</button>
+                    <button class="diff-btn" data-audio="off">[ SILENT ]</button>
                   </div>
                 </div>
               </div>
 
-              <!-- Close button -->
               <div class="diff-actions">
                 <button class="menu-btn" type="button" id="settings-close">
-                  <span class="label"><span class="br">[</span>RETURN<span class="br">]</span></span>
+                  <span class="label"><span class="br">[</span>RETURN TO OPERATIONS<span class="br">]</span></span>
                   <span class="chev">&rsaquo;</span>
                   <span class="icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -331,47 +292,40 @@
                 </button>
               </div>
 
-              <!-- Footer -->
-              <div class="ink-footer">OPS-TERM v1.4 · CFG</div>
+              <div class="ink-footer">HUSH_OS TUNING</div>
               <div class="ink-glyphs">. . .</div>
             </div>
           </div>
 
-          <!-- ===== HELP MODAL ===== -->
           <div class="modal hidden" id="help-modal">
             <div class="modal-panel ink-layer" role="dialog" aria-label="Field manual">
-              <!-- Status bar -->
               <div class="status">
-                <div class="status-left">[FIELD MANUAL: ACTIVE]</div>
-                <div class="status-right">[TIER-IV OPS GUIDE]</div>
+                <div class="status-left">[DIAGNOSTICS BUFFER ACTIVE]</div>
+                <div class="status-right">[INTRUSION OPERATIONAL SCHEMATICS]</div>
               </div>
 
-              <!-- Title -->
               <h1 class="menu-title">
-                <span class="row">Field</span>
-                <span class="row">Manual</span>
+                <span class="row">System</span>
+                <span class="row">Schematics</span>
               </h1>
 
-              <!-- Tagline -->
               <div class="tagline">
-                <span class="tag-chip">[OPERATIONS BRIEFING]</span>
-                <span>HOW TO STAY ALIVE</span>
+                <span class="tag-chip">[DIAGNOSTICS]</span>
+                <span>HOW TO AVOID DESTRUCTION BY FIREWALL</span>
               </div>
 
-              <!-- Help list -->
               <ul class="help-list">
-                <li><kbd>WASD</kbd> / <kbd>↑↓←→</kbd> — move</li>
-                <li><kbd>+</kbd>/<kbd>-</kbd> or <kbd>scroll</kbd> — zoom in / out</li>
-                <li><kbd>click + drag</kbd> — pick up ad banners; cover the <span class="hl">CLASSIFIED</span> doc to keep your gaze low</li>
-                <li>Collect <span class="hl">docs</span> (yellow), then accept the <span class="hl">cookie jar</span>, then reach <span class="hl">SUBSCRIBE</span> to exfiltrate</li>
-                <li>Watch for: <em>chasing recs · search shrapnel · falling comments · exploding likes · crushing cookie banner</em></li>
-                <li>The <span class="hl">account avatar</span> pulls a gun. One shot is lethal — rush it to break the aim.</li>
+                <li><kbd>WASD</kbd> / <kbd>↑↓←→</kbd> — execute position vector transfer</li>
+                <li><kbd>+</kbd>/<kbd>-</kbd> or <kbd>scroll</kbd> — zoom matrix scope in / out</li>
+                <li><kbd>click + drag</kbd> — capture unstyled wrapper banners; overlay the <span class="hl">CLASSIFIED</span> raw hash frame to mask container profile</li>
+                <li>Collect <span class="hl">hashes</span> (yellow), accept cookies banner injection loop, then reach <span class="hl">SUBSCRIBE link</span> to exfiltrate</li>
+                <li>Avoid: <em>chasing daemons · crash comments · search tracking code algorithms</em></li>
+                <li>The <span class="hl">defense firewall node</span> triggers active weapon lock. Rush its core origin immediately to distort tracking angle loop.</li>
               </ul>
 
-              <!-- Close button -->
               <div class="diff-actions">
                 <button class="menu-btn" type="button" id="help-close">
-                  <span class="label"><span class="br">[</span>RETURN<span class="br">]</span></span>
+                  <span class="label"><span class="br">[</span>RETURN TO TERMINAL<span class="br">]</span></span>
                   <span class="chev">&rsaquo;</span>
                   <span class="icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -382,16 +336,14 @@
                 </button>
               </div>
 
-              <!-- Footer -->
-              <div class="ink-footer">OPS-TERM v1.4 · MANUAL</div>
+              <div class="ink-footer">HUSH_OS SCHEMATICS</div>
               <div class="ink-glyphs">. . .</div>
             </div>
           </div>
 
-          <!-- ===== WIN/LOSE RESULTS SCREEN ===== -->
           <div class="overlay" id="overlay">
             <div class="results">
-              <div class="overlay-tag" id="overlay-tag">[ STATUS ]</div>
+              <div class="overlay-tag" id="overlay-tag">[ LINK STATE ]</div>
               <h3 id="overlay-title">—</h3>
               <p id="overlay-sub">—</p>
 
@@ -402,30 +354,30 @@
 
               <div class="stats-grid" id="stats-grid">
                 <div class="stat-row hidden-row" data-stat="time">
-                  <span class="stat-name">TIME</span>
+                  <span class="stat-name">LATENCY TIME</span>
                   <span class="stat-value" id="stat-time">—</span>
                   <span class="stat-stars" id="stat-time-stars"></span>
                 </div>
                 <div class="stat-row hidden-row" data-stat="stealth">
-                  <span class="stat-name">STEALTH</span>
+                  <span class="stat-name">STEALTH RATIO</span>
                   <span class="stat-value" id="stat-stealth">—</span>
                   <span class="stat-stars" id="stat-stealth-stars"></span>
                 </div>
                 <div class="stat-row hidden-row" data-stat="survival">
-                  <span class="stat-name">SURVIVAL</span>
+                  <span class="stat-name">SURVIVAL SEED</span>
                   <span class="stat-value" id="stat-survival">—</span>
                   <span class="stat-stars" id="stat-survival-stars"></span>
                 </div>
                 <div class="stat-row hidden-row" data-stat="docs">
-                  <span class="stat-name">DOCS</span>
+                  <span class="stat-name">HASH BUNDLES</span>
                   <span class="stat-value" id="stat-docs">—</span>
                   <span class="stat-stars"></span>
                 </div>
               </div>
 
               <div class="results-actions">
-                <button id="restart" class="results-btn primary">PLAY AGAIN</button>
-                <button id="back-menu" class="results-btn ghost">MAIN MENU</button>
+                <button id="restart" class="results-btn primary">RE-INITIALIZE LINK</button>
+                <button id="back-menu" class="results-btn ghost">CONSOLE ROOT</button>
               </div>
             </div>
           </div>
@@ -433,20 +385,17 @@
         <div class="hud">
           <div class="stat"><span class="stat-label">SIZE</span><span id="ui-size">75px</span></div>
           <div class="stat"><span class="stat-label">GAZE</span><span class="bar"><span class="bar-fill" id="ui-gaze"></span></span></div>
-          <div class="stat"><span class="stat-label">DOCS</span><span id="ui-docs">0 / 5</span></div>
+          <div class="stat"><span class="stat-label">HASHES</span><span id="ui-docs">0 / 5</span></div>
           <div class="stat"><span class="stat-label">🍪</span><span id="ui-cookie">no</span></div>
           <div class="stat"><span class="stat-label">ZOOM</span><span id="ui-zoom">100%</span></div>
           <div class="hint" id="ui-hint">infiltrating…</div>
         </div>
         <div class="instr">
-          <kbd>WASD</kbd> move &nbsp;·&nbsp; <kbd>+</kbd>/<kbd>-</kbd> or <kbd>scroll</kbd> zoom &nbsp;·&nbsp; <kbd>drag</kbd> ad banners &nbsp;·&nbsp; grab <code>cookies</code> &nbsp;·&nbsp; reach <code>SUBSCRIBE</code>
+          <kbd>WASD</kbd> transfer &nbsp;·&nbsp; <kbd>+</kbd>/<kbd>-</kbd> scale &nbsp;·&nbsp; <kbd>drag</kbd> banners &nbsp;·&nbsp; hijack <code>cookies</code> &nbsp;·&nbsp; reach <code>SUBSCRIBE</code>
         </div>
       </div>
     </div>
     <script>
-      // Lock the .viewport to a fixed 1920x1080 design size, scale-to-fit the
-      // browser window while preserving aspect ratio. Letterboxes appear in
-      // the unfilled area (body background = black).
       (function () {
         const DESIGN_W = 1920;
         const DESIGN_H = 1080;
@@ -460,7 +409,6 @@
         }
         window.addEventListener('resize', fitViewport);
         fitViewport();
-        // Re-run after fonts/images load in case dimensions shift
         window.addEventListener('load', fitViewport);
       })();
     </script>

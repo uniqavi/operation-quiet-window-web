@@ -4,59 +4,36 @@ import { loadMusic, playMusic, setMusicMuted } from '../game/music.js';
 import { playVoice, stopVoice, setVoiceMuted } from '../game/voice.js';
 import { MenuEffects } from '../game/menuEffects.js';
 
-// Intro phone call between Toto and the player — old friends reconnecting.
-// `{name}` is replaced with the codename the player typed in the name-prompt
-// modal (collected after BEGIN INFILTRATION, before this cutscene plays).
-// Each line has a `voiceId` mapping to /public/voice/<id>.mp3 for drop-in TTS.
+// 去人类化改造：将原本 TOTO 的电话对话，改为冷酷的系统内核加载与静默漏洞注入日志
 const CUTSCENE = [
-  { speaker: 'PHONE',  text: '*BRRRT.*  *BRRRT.*' /* SFX, not voiced */ },
-  { speaker: 'TOTO',   text: "Hey... pick up. It's me.",
-    voiceId: 'intro-toto-01' },
-  { speaker: 'YOU',    text: "Toto? Long time no call. Everything alright?",
-    voiceId: 'intro-you-01' },
-  { speaker: 'TOTO',   text: "...No. Things have gotten bad, {name}. Like — real bad.",
-    voiceId: 'intro-toto-02' },
-  { speaker: 'TOTO',   text: "HUSH Corp is getting out of hand. We have to do something. Now.",
-    voiceId: 'intro-toto-03' },
-  { speaker: 'YOU',    text: "Yeah... I've been watching it too. The headlines, the cover-ups. I bet what they're hiding is way worse than what's leaked.",
-    voiceId: 'intro-you-02' },
-  { speaker: 'YOU',    text: "I'm not feeling good about this, Toto.",
-    voiceId: 'intro-you-03' },
-  { speaker: 'TOTO',   text: "Exactly. That's why I called. You're our only shot right now — and I've got a plan.",
-    voiceId: 'intro-toto-04' },
-  { speaker: 'TOTO',   text: "I wrote a stealth agent. It disguises itself as a normal browser window. Just another tab nobody pays attention to.",
-    voiceId: 'intro-toto-05' },
-  { speaker: 'TOTO',   text: "You ride that window into HUSH's pages. Scan what they've buried under the fake comments and bot views. Pull the receipts.",
-    voiceId: 'intro-toto-06' },
-  { speaker: 'YOU',    text: "A 75-pixel rectangle. Subtle.",
-    voiceId: 'intro-you-04' },
-  { speaker: 'TOTO',   text: "That IS the subtle. Nobody looks twice at a window.",
-    voiceId: 'intro-toto-07' },
-  { speaker: 'TOTO',   text: "But before we go live — I'll walk you through a drill, {name}. You should see the system once before it's real.",
-    voiceId: 'intro-toto-08' },
-  { speaker: 'SYSTEM', text: "> spoofing user agent — you are 'NormalBrowser/1.0'" },
-  { speaker: 'SYSTEM', text: '> deploying to a sandbox for calibration...' },
+  { speaker: 'SYSTEM', text: "[ BOOTING HUSH_OS V4.0 ] ........................ SUCCESS" },
+  { speaker: 'KERNEL', text: "Initializing kernel subsystem... Allocating proxy buffers..." },
+  { speaker: 'SYSTEM', text: "[ WARNING ]: ACTIVE MONITORING DETECTED ON TARGET NETWORK." },
+  { speaker: 'DAEMON', text: "Deploying anti-tracker middleware. Spoofing signature as 'NormalBrowser/1.0'..." },
+  { speaker: 'DAEMON', text: "Injecting silent payload into the HUSH target pipeline..." },
+  { speaker: 'SYSTEM', text: "[ MALWARE PLANTED ]: Page control established via 75-pixel viewport." },
+  { speaker: 'KERNEL', text: "Scanning live data stream... Intercepting cookie jars and document metadata." },
+  { speaker: 'DAEMON', text: "Alert: Security nodes will attempt active trace. Close the distance to corrupt their tracking loops." },
+  { speaker: 'SYSTEM', text: "> INITIALIZATION COMPLETE. STANDBY FOR SANDBOX CALIBRATION DRILL..." }
 ];
 
-// Resolve {name} placeholders against the saved codename.
+// 将原本的玩家自定义名字，改为纯机械的代理节点 ID 生成
 function formatLine(text) {
-  const name = (localStorage.getItem('oqw-name') || '').trim() || 'operative';
-  return text.replace(/\{name\}/g, name);
+  const seed = (localStorage.getItem('oqw-node-id') || 'NODE-0x7F3A9');
+  return text.replace(/\{name\}/g, seed);
 }
 
 const SPEAKER_COLORS = {
-  PHONE:  '#9a9aa0',
-  TOTO:   '#E63946',
-  YOU:    '#4A7BC8',
-  SYSTEM: '#2D8659',
+  SYSTEM: '#2D8659', // 系统绿色
+  KERNEL: '#9a9aa0', // 内核灰色
+  DAEMON: '#E63946', // 守护进程红色（代替原本的 TOTO 颜色，保留视觉张力）
 };
 
-// Portrait file paths per speaker. Missing files just leave portrait blank.
+// 彻底移除人类头像资源
 const SPEAKER_PORTRAITS = {
-  PHONE:  '/portraits/phone.png',
-  TOTO:   '/portraits/toto.png',
-  YOU:    '/portraits/you.png',
-  SYSTEM: '',  // no portrait for system messages
+  SYSTEM: '',
+  KERNEL: '',
+  DAEMON: '',
 };
 
 export default class MenuScene extends Phaser.Scene {
@@ -98,16 +75,11 @@ export default class MenuScene extends Phaser.Scene {
     const savedAudio = localStorage.getItem('oqw-audio') || 'on';
     this.markAudioBtn(savedAudio);
 
-    // Music — preload tracks + start menu theme (will only play after first
-    // user interaction due to browser autoplay policy, that's fine)
     loadMusic();
     setMusicMuted(savedAudio === 'off');
     setVoiceMuted(savedAudio === 'off');
     playMusic('menu', { fadeMs: 1200 });
 
-    // Menu background effects — dust in projector beam, rain, steam,
-    // city twinkles. One MenuEffects per dark-room canvas (main / diff /
-    // intro all share the same image so all three get the same ambience).
     this.fx = [];
     const fxCanvasIds = ['menu-fx-canvas-main', 'menu-fx-canvas-diff', 'menu-fx-canvas-intro'];
     for (const id of fxCanvasIds) {
@@ -118,8 +90,6 @@ export default class MenuScene extends Phaser.Scene {
       this.fx.push(fx);
     }
 
-    // Single AbortController removes all DOM listeners on shutdown — safe to
-    // re-create MenuScene multiple times (e.g. via "MAIN MENU" from results).
     this.abort = new AbortController();
     const signal = this.abort.signal;
 
@@ -135,13 +105,12 @@ export default class MenuScene extends Phaser.Scene {
       card.addEventListener('click', () => this.selectDiff(card.dataset.diff), { signal });
     });
     this.bindClick('diff-back',    () => this.closeDiffMenu(), signal);
-    // BEGIN INFILTRATION now opens the name-prompt modal; the cutscene only
-    // starts after the player commits a codename (required, not skippable).
+    
+    // 打开“授权节点/密钥配置”弹窗（代替原本的人类起名弹窗）
     this.bindClick('diff-confirm', () => this.openNamePrompt(), signal);
     this.bindClick('name-back',    () => this.closeNamePrompt(), signal);
     this.bindClick('name-confirm', () => this.commitNameAndBegin(), signal);
-    // Live-validate the input: enable CONFIRM only when a non-empty codename
-    // is present. Enter submits.
+
     if (this.dom.nameInput) {
       this.dom.nameInput.addEventListener('input', () => this.refreshNameValidity(), { signal });
       this.dom.nameInput.addEventListener('keydown', (e) => {
@@ -152,7 +121,7 @@ export default class MenuScene extends Phaser.Scene {
       }, { signal });
     }
 
-    // Audio toggle in settings — mutes music + voice live
+    // Audio toggle in settings
     document.querySelectorAll('.diff-btn[data-audio]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const v = btn.dataset.audio;
@@ -169,7 +138,7 @@ export default class MenuScene extends Phaser.Scene {
       this.endCutscene();
     }, signal);
 
-    // Cutscene advance — click anywhere on .intro OR Space/Enter
+    // Cutscene advance
     this.advanceFn = (e) => {
       if (this.dom.intro.classList.contains('hidden')) return;
       if (e.type === 'keydown' && e.key !== ' ' && e.key !== 'Enter') return;
@@ -182,7 +151,6 @@ export default class MenuScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.abort.abort();
       if (this.typewriterTimer) clearTimeout(this.typewriterTimer);
-      // Stop all running effect canvases to release rAF + listeners
       if (this.fx) this.fx.forEach((fx) => fx.stop());
     });
   }
@@ -224,14 +192,15 @@ export default class MenuScene extends Phaser.Scene {
     beep(900, 0.04, 'square', 0.04);
   }
 
-  // ===== Name prompt (between difficulty and cutscene) =====
-  // The name-prompt is a .modal (layered above) — it intentionally leaves
-  // .diff-menu mounted so its .dark-room background stays visible. A CSS
-  // :has() rule hides the diff overlay automatically while a modal is open.
+  // ===== 去人类化：修改“起名弹窗”逻辑为“配置代理节点 ID” =====
   openNamePrompt() {
     initAudio();
     this.show(this.dom.namePrompt);
-    const saved = (localStorage.getItem('oqw-name') || '').trim();
+    // 如果没有生成过机器 ID，默认给一个冷酷的随机十六进制
+    let saved = localStorage.getItem('oqw-node-id');
+    if (!saved) {
+      saved = 'NODE_0x' + Math.floor(Math.random() * 0xFFFFF).toString(16).toUpperCase();
+    }
     if (this.dom.nameInput) {
       this.dom.nameInput.value = saved;
       setTimeout(() => this.dom.nameInput.focus(), 60);
@@ -248,14 +217,15 @@ export default class MenuScene extends Phaser.Scene {
     if (this.dom.nameNote) {
       this.dom.nameNote.classList.toggle('ready', ok);
       this.dom.nameNote.textContent = ok
-        ? '▸ codename locked. press CONFIRM or hit Enter.'
-        : '▸ type a codename to continue';
+        ? '▸ proxy authorization key locked. press CONFIRM.'
+        : '▸ input proxy node identification key';
     }
   }
   commitNameAndBegin() {
     const v = (this.dom.nameInput?.value || '').trim();
-    if (!v) return;                               // safety: button should be disabled
-    localStorage.setItem('oqw-name', v);
+    if (!v) return;
+    localStorage.setItem('oqw-node-id', v); // 存入节点 ID
+    localStorage.setItem('oqw-name', v);    // 兼容原本的代码字段
     beep(900, 0.05, 'square', 0.04);
     this.hide(this.dom.namePrompt);
     this.beginCutscene();
@@ -280,36 +250,23 @@ export default class MenuScene extends Phaser.Scene {
   showLine(idx) {
     const line = CUTSCENE[idx];
     if (!line) return;
-    // Speaker chip — background tinted by speaker, text stays white.
     this.dom.dialogueSpeaker.textContent = line.speaker;
     this.dom.dialogueSpeaker.style.background = SPEAKER_COLORS[line.speaker] || '#1a1a1f';
     this.dom.dialogueSpeaker.style.color = '#fff';
     this.dom.dialogueLine.textContent = '';
-    // (.dialogue-hint is display:none — kept for backwards-compat, no opacity needed)
 
-    // Swap portrait. If file is missing (404), onerror hides the element so
-    // dialogue still reads cleanly without a broken-image icon.
     const portraitEl = this.dom.dialoguePortrait;
     if (portraitEl) {
-      const path = SPEAKER_PORTRAITS[line.speaker];
-      if (path) {
-        portraitEl.onerror = () => portraitEl.classList.add('missing');
-        portraitEl.onload  = () => portraitEl.classList.remove('missing');
-        portraitEl.src = path;
-      } else {
-        portraitEl.removeAttribute('src');
-        portraitEl.classList.add('missing');
-      }
+      portraitEl.removeAttribute('src');
+      portraitEl.classList.add('missing'); // 彻底隐藏人类头像框
     }
 
-    // Play matching voice clip if one exists (drop-in MP3s — missing files
-    // silently no-op so the cutscene still works pre-asset).
-    if (line.voiceId) playVoice(line.voiceId);
-    else stopVoice();
+    // 禁用原本的人类语音，因为现在是纯机器代码滚动
+    stopVoice();
 
     this.typingActive = true;
     let i = 0;
-    const text = formatLine(line.text);   // resolve {name} → codename
+    const text = formatLine(line.text);
     const tick = () => {
       if (!this.typingActive) {
         this.dom.dialogueLine.textContent = text;
@@ -319,9 +276,10 @@ export default class MenuScene extends Phaser.Scene {
         i++;
         this.dom.dialogueLine.textContent = text.slice(0, i);
         if (text[i - 1] !== ' ' && Math.random() < 0.25) {
-          beep(1700 + Math.random() * 500, 0.005, 'square', 0.012);
+          // 打字音效调整为更清脆、更像电传打字机或电脑计算的嘟嘟声
+          beep(2000 + Math.random() * 300, 0.003, 'square', 0.008);
         }
-        this.typewriterTimer = setTimeout(tick, 18);
+        this.typewriterTimer = setTimeout(tick, 15);
       } else {
         this.typingActive = false;
       }
@@ -359,9 +317,6 @@ export default class MenuScene extends Phaser.Scene {
     setTimeout(() => {
       this.hide(this.dom.intro);
       document.body.classList.remove('menu-mode');
-      // Route through the tutorial first. (During the build phase we always
-      // show it; later we can gate on localStorage 'oqw-tutorial-done' so
-      // repeat players skip straight to GameScene.)
       this.scene.start('TutorialScene', { difficulty: this.selectedDiff });
       setTimeout(() => {
         flash.classList.remove('active');

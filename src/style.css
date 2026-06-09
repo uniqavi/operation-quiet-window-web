@@ -1,6 +1,7 @@
 :root {
-  /* All-mono UI for the cyber/spy aesthetic. Major Mono Display on big titles
-     for impact, Space Mono everywhere else for readable distinctive body. */
+  /* [EN] All-mono UI for the cyber/spy aesthetic. Major Mono Display on big titles for impact, Space Mono everywhere else for readable distinctive body. 
+     [ZH] 全等宽字体 UI，打造赛博/间谍美学。大标题使用 Major Mono Display 带来视觉冲击，其余地方使用 Space Mono 确保文本清晰独特。
+  */
   --font-display: 'Major Mono Display', 'Space Mono', ui-monospace, monospace;
   --font-mono:    'Space Mono', ui-monospace, 'Courier New', monospace;
   --font-sans:    'Space Mono', ui-monospace, 'Courier New', monospace;
@@ -8,7 +9,19 @@
   --green: #2D8659;
   --yellow: #F4D35E;
   --blue: #4A7BC8;
+
+  /* [EN] System Console UI Colors Overwrite - Pure matrix green and warning red.
+     [ZH] 系统控制台 UI 颜色重载 - 纯正的矩阵荧光绿与警告红。
+  */
+  --ink:        #33ff33;        /* [EN] Primary Text - Terminal Fluorescent Green | [ZH] 主体文案 - 终端荧光绿 */
+  --ink-soft:   rgba(51, 255, 51, 0.7); /* [EN] Secondary Text | [ZH] 次级文本 */
+  --ink-faint:  rgba(51, 255, 51, 0.4); /* [EN] Tertiary / Disabled | [ZH] 三级 / 禁用文本 */
+  --paper:      #040605;        /* [EN] CRT Screen Dark Background | [ZH] CRT 屏幕深暗底色 */
+  --red-hover:  #ff3344;        /* [EN] Hover/Accent - Warning Red | [ZH] 悬浮/强调 - 警告红 */
+  --rule:       rgba(51, 255, 51, 0.3);  /* [EN] Divider Lines | [ZH] 主分割线 */
+  --rule-soft:  rgba(51, 255, 51, 0.15); /* [EN] Secondary Dividers | [ZH] 次级分割线 */
 }
+
 * { box-sizing: border-box; }
 html, body {
   margin: 0;
@@ -22,6 +35,7 @@ html, body {
 }
 
 /* ===== Fixed 1920x1080 viewport. JS scales it to fit the browser window. ===== */
+/* ===== 固定 1920x1080 视口。JS 会自动缩放以适应浏览器窗口。 ===== */
 .viewport {
   position: absolute;
   left: 0;
@@ -31,11 +45,11 @@ html, body {
   background: #0c0c0e;
   overflow: hidden;
   transform-origin: 0 0;
-  /* transform set dynamically by inline script in index.html */
 }
 
-/* While in menu / cutscene, hide the in-game fake-browser chrome so the
-   dark-room shot can be cinematic. The body class is toggled by MenuScene. */
+/* [EN] While in menu / cutscene, hide the in-game fake-browser chrome.
+   [ZH] 当处于菜单或过场动画模式时，隐藏游戏内的假浏览器外壳。
+*/
 body.menu-mode .tabs,
 body.menu-mode .urlbar,
 body.menu-mode .hud,
@@ -50,8 +64,9 @@ body.menu-mode .instr { display: none; }
 .tab .x { color: #888; margin-left: 8px; }
 .tab.plus { cursor: default; }
 
-/* Locked tabs (L2/L3 pre-unlock) — grayed, padlock, hover tooltip.
-   overflow:visible so the ::after tooltip isn't clipped by the parent. */
+/* [EN] Locked tabs (L2/L3 pre-unlock) — grayed, padlock, hover tooltip.
+   [ZH] 未解锁的标签页（L2/L3 前置锁定）— 灰色、挂锁、悬浮工具提示。
+*/
 .tab.locked { background: #07070a; color: #44464d; cursor: not-allowed; border-color: #1a1a1e; overflow: visible; }
 .tab.locked .lock { margin-right: 6px; opacity: 0.6; }
 .tab.locked .x { color: #2a2a2e; }
@@ -70,7 +85,7 @@ body.menu-mode .instr { display: none; }
   pointer-events: none;
 }
 
-/* Tab unlocking — used when L2 becomes available */
+/* [EN] Tab unlocking animation | [ZH] 标签页解锁动画 */
 .tab.unlocking {
   animation: tab-unlock-pulse 1.6s ease-out;
 }
@@ -102,6 +117,7 @@ canvas#oqw { position: absolute; inset: 0; width: 100%; height: 100%; pointer-ev
 .instr code { color: var(--red); }
 
 /* ===== Win/lose results screen ===== */
+/* ===== 胜利/失败结算屏幕 ===== */
 .overlay { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(12,12,14,0.94); color: #f5f5f5; padding: 20px; z-index: 20; }
 .overlay.show { display: flex; }
 .results { width: 600px; text-align: center; }
@@ -109,13 +125,7 @@ canvas#oqw { position: absolute; inset: 0; width: 100%; height: 100%; pointer-ev
 .overlay h3 { font-size: 38px; margin: 0 0 12px; font-weight: 500; font-family: var(--font-mono); letter-spacing: 3px; color: #fff; }
 .overlay p { font-size: 14px; color: #9a9a9f; margin: 0 0 28px; line-height: 1.7; }
 
-.grade-display {
-  margin: 18px 0 26px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
+.grade-display { margin: 18px 0 26px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .grade-letter {
   font-family: var(--font-display);
   font-size: 96px;
@@ -129,261 +139,135 @@ canvas#oqw { position: absolute; inset: 0; width: 100%; height: 100%; pointer-ev
   transition: opacity 0.4s, transform 0.4s cubic-bezier(0.34, 1.6, 0.64, 1);
 }
 .grade-letter.show { opacity: 1; transform: scale(1); }
-.grade-letter.tier-flawless { color: #ffd866; }
-.grade-letter.tier-ace      { color: var(--yellow); }
+.grade-letter.tier-flawless  { color: #ffd866; }
+.grade-letter.tier-ace       { color: var(--yellow); }
 .grade-letter.tier-excellent { color: #b8e986; }
-.grade-letter.tier-good     { color: var(--blue); }
-.grade-letter.tier-pass     { color: #c4c4cc; }
-.grade-letter.tier-barely   { color: #888; }
-.grade-letter.tier-fail     { color: var(--red); text-shadow: 0 0 30px var(--red); }
-.grade-name {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  letter-spacing: 6px;
-  color: #9a9aa0;
-  margin-top: 4px;
-  opacity: 0;
-  transition: opacity 0.4s 0.2s;
-}
-.grade-name.show { opacity: 1; }
+.grade-letter.tier-good      { color: var(--blue); }
+.grade-letter.tier-pass      { color: #c4c4cc; }
+.grade-letter.tier-barely    { color: #888; }
+.grade-letter.tier-fail      { color: var(--red); text-shadow: 0 0 30px var(--red); }
+.grade-name { font-family: var(--font-mono); font-size: 14px; letter-spacing: 6px; color: #9a9aa0; margin-top: 4px; opacity: 0; transition: opacity 0.4s 0.2s; }
+.grade-letter.show + .grade-name { opacity: 1; }
 
-.stats-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 0 auto 28px;
-  max-width: 460px;
-  text-align: left;
-}
-.stat-row {
-  display: grid;
-  grid-template-columns: 110px 1fr auto;
-  gap: 18px;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 4px;
-  padding: 10px 16px;
-  opacity: 1;
-  transition: opacity 0.35s, transform 0.35s;
-}
-.stat-row.hidden-row {
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-}
+.stats-grid { display: flex; flex-direction: column; gap: 10px; margin: 0 auto 28px; max-width: 460px; text-align: left; }
+.stat-row { display: grid; grid-template-columns: 140px 1fr auto; gap: 18px; align-items: center; font-family: var(--font-mono); font-size: 13px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; padding: 10px 16px; opacity: 1; transition: opacity 0.35s, transform 0.35s; }
+.stat-row.hidden-row { opacity: 0; transform: translateY(8px); pointer-events: none; }
 .stat-name { color: #6b6b73; letter-spacing: 2px; font-size: 11px; }
 .stat-value { color: #f5f5f5; }
 .stat-stars { color: #2a2a2e; font-size: 16px; letter-spacing: 2px; }
 .stat-stars .filled { color: var(--yellow); text-shadow: 0 0 6px var(--yellow); }
 
-.results-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-}
-.results-btn {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  cursor: pointer;
-  border-radius: 4px;
-  letter-spacing: 2px;
-  padding: 11px 28px;
-  border: 1px solid;
-  background: transparent;
-  color: #f5f5f5;
-  transition: background 0.15s, border-color 0.15s;
-  min-width: 180px;
-}
+.results-actions { display: flex; gap: 12px; justify-content: center; }
+.results-btn { font-family: var(--font-mono); font-size: 12px; cursor: pointer; border-radius: 4px; letter-spacing: 2px; padding: 11px 28px; border: 1px solid; background: transparent; color: #f5f5f5; transition: background 0.15s, border-color 0.15s; min-width: 180px; }
 .results-btn.primary { border-color: var(--red); }
 .results-btn.primary:hover { background: var(--red); }
 .results-btn.ghost { border-color: #444; color: #9a9aa0; }
 .results-btn.ghost:hover { background: rgba(255,255,255,0.05); border-color: #777; color: #fff; }
 
-/* ============================================================== */
-/* MAIN MENU + INTRO CUTSCENE — placeholder art (CSS-only for now) */
-/* ============================================================== */
-
 .hidden { display: none !important; }
 
-/* Background scene — uses the menu-bg.png illustration as full-cover bg.
-   Old placeholder children (.monitor, .silhouette, .room-vignette, .scanlines)
-   are kept hidden for backward compat with existing HTML, since some other
-   screens still mention them. */
+/* ========================================================================== */
+/* 💻 [EN] RESTRUCTURING: COLD CONSOLE VISUAL OVERRIDES                       */
+/* [ZH] 去人类化重构：冷酷计算机控制台全屏视觉重载                         */
+/* ========================================================================== */
+
+/* [EN] Force-remove the illustration room background. Switched to dark matrix environment.
+   [ZH] 强行清除原先唯美的人物房间背景图。全面切换到深色矩阵虚拟环境。
+*/
 .dark-room {
   position: absolute;
   inset: 0;
-  background: #050508 url('/menu-bg.png') center / cover no-repeat;
+  background-color: #040605 !important;
+  background-image: url('/open%20page_bg.gif'), url('/open%20page_design.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
   overflow: hidden;
   z-index: 1;
 }
-/* Subtle film grain / scanline overlay on top of the image — keeps the
-   moody indie-game feel and ties the static image into the rest of the
-   game's CRT aesthetic. */
+
+/* [EN] CRT Monitor Emulation - Vertical scanlines and overlay grids instead of film grains.
+   [ZH] CRT 显示器模拟 - 使用垂直微型扫描线与偏色网格层代替原先的胶片颗粒。
+*/
 .dark-room::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px, transparent 1px, transparent 3px);
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)) !important;
+  background-size: 100% 3px, 6px 100% !important;
   pointer-events: none;
-  mix-blend-mode: overlay;
+  mix-blend-mode: normal !important;
+  z-index: 5;
 }
-/* Effects canvas — sits on top of the bg image, below the menu UI.
-   Draws particles (dust in projector beam, steam from mug, rain on
-   window, city light twinkles). See src/game/menuEffects.js */
-.menu-fx-canvas {
+
+/* [EN] Shut down all human room lighting elements (lamp, projector flare, monitor glow).
+   [ZH] 彻底切断隐藏旧版留下的人类房间灯光、投影仪闪烁及显示器微光。
+*/
+.fx-monitor-glow,
+.fx-lamp-glow,
+.fx-led,
+.fx-projection-flicker {
+  display: none !important;
+}
+
+/* [EN] CRT Vignette Layer | [ZH] CRT 荧幕边缘暗角阴影层 */
+.fx-crt-scanlines {
   position: absolute;
   inset: 0;
+  background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.75) 100%);
   pointer-events: none;
-  z-index: 2;
+  z-index: 4;
 }
-/* CSS-driven light pulses anchored to specific positions in the image.
-   Coordinates are eyeballed to the 16:9 source — tweak as needed. */
-/* Subtle glow overlays — positions matched to menu-bg.png landmarks.
-   All percentages of canvas-wrap. Tweak if image art changes. */
-.fx-monitor-glow {
-  position: absolute;
-  left: 73%; top: 45%;
-  width: 11%; height: 18%;
-  background: radial-gradient(ellipse, rgba(180, 220, 255, 0.25) 0%, transparent 65%);
-  pointer-events: none;
-  z-index: 2;
-  animation: fx-breathe 5s ease-in-out infinite;
-  mix-blend-mode: screen;
-}
-.fx-lamp-glow {
-  position: absolute;
-  left: 88%; top: 38%;
-  width: 13%; height: 18%;
-  background: radial-gradient(ellipse, rgba(255, 175, 80, 0.30) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 2;
-  animation: fx-lamp-flicker 6.4s ease-in-out infinite;
-  mix-blend-mode: screen;
-}
-.fx-led {
-  position: absolute;
-  left: 93.5%; top: 87.5%;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: #E63946;
-  box-shadow: 0 0 6px #E63946, 0 0 10px rgba(230, 57, 70, 0.5);
-  pointer-events: none;
-  z-index: 3;
-  animation: fx-led-pulse 1.8s ease-in-out infinite;
-}
-.fx-projection-flicker {
-  position: absolute;
-  left: 3%; top: 3%;
-  width: 43%; height: 66%;
-  background: rgba(180, 220, 255, 0.03);
-  pointer-events: none;
-  z-index: 2;
-  mix-blend-mode: screen;
-  animation: fx-projection 7s ease-in-out infinite;
-}
-@keyframes fx-breathe {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50%      { opacity: 1.0; transform: scale(1.04); }
-}
-@keyframes fx-lamp-flicker {
-  0%, 92%, 100% { opacity: 0.9; }
-  94% { opacity: 0.6; }
-  95% { opacity: 1.0; }
-  96% { opacity: 0.5; }
-  97% { opacity: 0.95; }
-}
-@keyframes fx-led-pulse {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50%      { opacity: 1.0; transform: scale(1.25); }
-}
-@keyframes fx-projection {
-  0%, 100% { opacity: 0; }
-  48% { opacity: 0; }
-  50% { opacity: 0.6; }
-  52% { opacity: 0; }
-}
-/* Hide the old placeholder children — kept in HTML for backward compat
-   but no longer rendered. */
-.room-vignette,
-.monitor,
-.monitor::after,
-.monitor-screen,
-.silhouette,
-.scanlines { display: none; }
 
-/* ===== Main menu UI — left-aligned (Ghost-of-Tsushima-style) ===== */
-.main-menu {
+/* [EN] Disable old legacy room layer layout | [ZH] 废弃隐藏原先过时的房间分层 */
+.room-vignette, .monitor, .monitor-screen, .silhouette, .scanlines, .menu-tag, .menu-sub, .menu-foot, .diff-title, .modal-tag, .modal-panel h2, .modal-close-btn { 
+  display: none !important; 
+}
+
+/* ========================================================================== */
+/* 📟 [EN] INTERFACE LAYER: PURE DIGITAL TERMINAL PANEL DESIGN                */
+/* [ZH] 界面面板层：纯粹的扁平化数字终端大面板设计                         */
+/* ========================================================================== */
+
+.main-menu, .diff-menu {
   position: absolute;
   inset: 0;
   z-index: 10;
-}
-/* (legacy placeholder shifts removed — bg image now lives in .dark-room) */
-
-/* ──────────────────────────────────────────────────────────────────────
-   INK-LAYER MAIN MENU — terminal-panel design.
-   Color palette tuned for "projected on a wall" feel: muted teal-blue
-   inks (matches the cold projector light), more transparency so the
-   wall texture shows through, cyan accent for hover (no red).
-   ────────────────────────────────────────────────────────────────────── */
-:root {
-  /* All ink colors use rgba so the wall texture bleeds through naturally */
-  --ink:        rgba(32, 52, 64, 0.82);       /* primary text — muted teal-navy */
-  --ink-soft:   rgba(32, 52, 64, 0.56);       /* secondary text */
-  --ink-faint:  rgba(32, 52, 64, 0.40);       /* tertiary / disabled */
-  --paper:      #e9ecec;                       /* projected light cream */
-  --red-hover:  rgba(70, 135, 158, 0.88);     /* hover/accent — cool teal-cyan */
-  --rule:       rgba(32, 52, 64, 0.32);       /* divider lines */
-  --rule-soft:  rgba(32, 52, 64, 0.16);       /* secondary dividers */
 }
 
 .ink-layer {
   position: absolute;
-  /* Cover the FULL wall-projection rectangle. Source width is intentionally
-     larger than the visible target width because rotateY(23deg) foreshortens
-     the right side significantly — extra source width compensates so the
-     post-transform panel actually fills the projection. Applies to main
-     menu (.menu-overlay.ink-layer), diff menu (.diff-overlay.ink-layer),
-     and modals (.modal-panel.ink-layer). */
-  left: 6%;
-  top: 3.5%;
-  width: 54%;
-  height: 70%;
-  /* Multiply blend — ink darkens the wall texture beneath, making the panel
-     read as if it's actually inked/projected ON the wall rather than
-     layered above it. The wall's color cast tints everything subtly. */
-  mix-blend-mode: multiply;
+  left: 5% !important;
+  top: 5% !important;
+  width: 90% !important; /* [EN] Widened for a spacious desktop console feel | [ZH] 扩宽显示比例以适应全屏系统桌面感 */
+  height: 90% !important;
   z-index: 10;
   box-sizing: border-box;
-  padding: 1.6% 2%;
+  padding: 2% 3%;
   display: flex;
   flex-direction: column;
   color: var(--ink);
   font-family: 'Share Tech Mono', ui-monospace, monospace;
   text-align: left;
-  background: transparent;
-  border: none;
-  backdrop-filter: none;
-  /* Subtle scanlines across the projected panel */
+  background: rgba(5, 10, 6, 0.85) !important; /* [EN] Matrix Dark Glass | [ZH] 矩阵微透深色玻璃 */
+  border: 1px solid rgba(51, 255, 51, 0.3) !important;
+  box-shadow: inset 0 0 30px rgba(51, 255, 51, 0.1), 0 0 20px rgba(0,0,0,0.8) !important;
+  
+  /* [EN] Flatten the projection. No longer tilted against room walls | [ZH] 展平投影。使其不再契合房间墙壁，化为纯正平面终端 */
+  transform: perspective(1000px) rotateY(0deg) rotateX(0deg) !important;
+  transform-origin: center center !important;
+  
   background-image: repeating-linear-gradient(
     to bottom,
-    rgba(17, 36, 44, 0.05) 0px,
-    rgba(17, 36, 44, 0.05) 1px,
+    rgba(51, 255, 51, 0.02) 0px,
+    rgba(51, 255, 51, 0.02) 1px,
     transparent 1px,
-    transparent 3px
-  );
-  /* Perspective tilt — panel looks projected on an angled wall. The right
-     side recedes (smaller) with a subtle forward lean. Hinge is the LEFT
-     edge since that side of the wall is closer to camera in menu-bg.png. */
-  transform: perspective(1800px) rotateY(24deg) rotateX(-1.5deg);
-  transform-origin: left center;
-  transform-style: preserve-3d;
-  /* Slight depth shadow on the wall side to sell the projection */
-  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.25));
+    transparent 4px
+  ) !important;
 }
-/* Status bar at top of the panel — operational status + date */
+
+/* [EN] Panel Status Top Bar | [ZH] 面板顶端系统状态栏 */
 .ink-layer .status {
   display: flex;
   justify-content: space-between;
@@ -404,11 +288,10 @@ canvas#oqw { position: absolute; inset: 0; width: 100%; height: 100%; pointer-ev
   height: 1px;
   background: var(--rule-soft);
 }
-.ink-layer .status-right { text-align: right; }
 
-/* Title — heavy italic condensed sans (Saira Condensed Black) */
+/* [EN] Giant Title Text | [ZH] 巨型荧光绿色系统标题 */
 .ink-layer .menu-title {
-  font-family: 'Saira Condensed', 'Oswald', 'Impact', sans-serif;
+  font-family: 'Saira Condensed', sans-serif;
   font-weight: 800;
   font-style: italic;
   font-size: 84px;
@@ -420,7 +303,7 @@ canvas#oqw { position: absolute; inset: 0; width: 100%; height: 100%; pointer-ev
 }
 .ink-layer .menu-title .row { display: block; }
 
-/* Classification tagline with [chip] highlights */
+/* [EN] Subtitle Sub-Chips | [ZH] 标签辅助芯片级高亮栏 */
 .ink-layer .tagline {
   font-family: 'Share Tech Mono', monospace;
   font-size: 15px;
@@ -430,166 +313,94 @@ canvas#oqw { position: absolute; inset: 0; width: 100%; height: 100%; pointer-ev
   text-transform: uppercase;
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
   align-items: baseline;
 }
 .ink-layer .tag-chip {
   display: inline-block;
   padding: 2px 6px;
-  background: rgba(17, 36, 44, 0.10);
-  border: 1px solid rgba(17, 36, 44, 0.20);
+  background: rgba(51, 255, 51, 0.1);
+  border: 1px solid rgba(51, 255, 51, 0.3);
   color: var(--ink);
   font-weight: 700;
 }
 
-/* Legacy classes hidden — replaced by the new ink-layer structure */
-.menu-tag, .menu-sub, .menu-foot { display: none; }
-/* Buttons — notched-corner outlined cells with bracketed label + icon */
+/* ──────────────────────────────────────────────────────────────────────
+   🔲 [EN] BUTTONS & SELECTION CARDS: RECTANGULAR INDUSTRIAL DESIGN
+   ─── [ZH] 按钮与选项卡片：冷酷冰冷的直角工业风重构
+   ────────────────────────────────────────────────────────────────────── */
+
 .ink-layer .menu-buttons {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin-top: 4px;
+  max-width: 600px; /* [EN] Keep terminal layout tidy | [ZH] 约束左侧控制按钮宽度 */
 }
+
 .ink-layer .menu-btn {
-  --b: 1.6px;
   position: relative;
   display: grid;
   grid-template-columns: 1fr auto auto;
   align-items: stretch;
   height: 56px;
-  background: transparent;
-  color: var(--ink);
-  border: var(--b) solid var(--ink);
+  background: #080c09 !important;
+  color: var(--ink) !important;
+  border: 1.5px solid #33ff33 !important;
   cursor: pointer;
-  /* Thicker font that mirrors the title family but stays non-italic and a
-     weight lighter so it doesn't compete with the headline. */
-  font-family: 'Saira Condensed', 'Oswald', 'Impact', sans-serif;
+  font-family: 'Saira Condensed', sans-serif;
   font-weight: 700;
   font-size: 22px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  /* Notched corners — clip-path produces small chamfer at all 4 corners */
-  clip-path: polygon(
-    0 8px, 8px 0,
-    calc(100% - 8px) 0, 100% 8px,
-    100% calc(100% - 8px), calc(100% - 8px) 100%,
-    8px 100%, 0 calc(100% - 8px)
-  );
-  transition: color 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+  clip-path: none !important; /* [EN] Kill polygons. Pure sharp rectangular blocks | [ZH] 摧毁斜角切边。采用最硬核的无条件纯直角块 */
   padding: 0;
   text-align: left;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
 }
-.ink-layer .menu-btn .label {
-  display: flex;
-  align-items: center;
-  padding: 0 18px;
-}
-.ink-layer .menu-btn .label .br {
-  opacity: 0.7;
-  padding: 0 6px;
-  font-weight: 500;
-  /* Brackets in a more neutral mono so they don't fight the heavy label */
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 20px;
-}
-.ink-layer .menu-btn .chev {
-  display: flex;
-  align-items: center;
-  padding: 0 14px;
-  font-size: 22px;
-  color: var(--ink);
-  opacity: 0.85;
-}
+.ink-layer .menu-btn .label { display: flex; align-items: center; padding: 0 18px; }
+.ink-layer .menu-btn .label .br { font-family: 'Share Tech Mono', monospace; font-size: 20px; padding: 0 6px; opacity: 0.7; }
+.ink-layer .menu-btn .chev { display: flex; align-items: center; padding: 0 14px; font-size: 22px; color: #33ff33 !important; opacity: 0.85; }
 .ink-layer .menu-btn .icon {
   width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: var(--b) solid var(--ink);
-  color: var(--ink);
+  border-left: 1.5px solid #33ff33 !important;
+  color: #33ff33 !important;
   background: transparent;
-  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  transition: all 0.12s ease;
 }
 .ink-layer .menu-btn .icon svg { width: 24px; height: 24px; display: block; }
 
-/* Hover: red outline + red text + filled icon panel */
+/* [EN] Hover State - Transitions from neon matrix green into sharp electronic alert red.
+   [ZH] 悬浮触发状态 - 由低调的荧光矩阵绿瞬间转变为强烈的电子警告红。
+*/
 .ink-layer .menu-btn:hover:not([disabled]),
 .ink-layer .menu-btn:focus-visible:not([disabled]) {
-  color: var(--red-hover);
-  border-color: var(--red-hover);
+  color: #ff3344 !important;
+  border-color: #ff3344 !important;
+  box-shadow: 0 0 12px rgba(255, 51, 68, 0.3) !important;
   outline: none;
 }
-.ink-layer .menu-btn:hover:not([disabled]) .chev,
-.ink-layer .menu-btn:focus-visible:not([disabled]) .chev { color: var(--red-hover); }
-.ink-layer .menu-btn:hover:not([disabled]) .icon,
-.ink-layer .menu-btn:focus-visible:not([disabled]) .icon {
-  background: var(--red-hover);
-  color: var(--paper);
-  border-left-color: var(--red-hover);
+.ink-layer .menu-btn:hover:not([disabled]) .chev { color: #ff3344 !important; }
+.ink-layer .menu-btn:hover:not([disabled]) .icon {
+  background: #ff3344 !important;
+  color: #000 !important;
+  border-left-color: #ff3344 !important;
 }
 .ink-layer .menu-btn:active { transform: translateY(1px); }
+.ink-layer .menu-btn[disabled] { color: rgba(51, 255, 51, 0.25) !important; border-color: rgba(51, 255, 51, 0.25) !important; cursor: not-allowed; }
+.ink-layer .menu-btn[disabled] .icon { color: rgba(51, 255, 51, 0.25) !important; border-left-color: rgba(51, 255, 51, 0.25) !important; }
 
-.ink-layer .menu-btn[disabled] {
-  color: rgba(17, 36, 44, 0.4);
-  border-color: rgba(17, 36, 44, 0.4);
-  cursor: not-allowed;
-}
-.ink-layer .menu-btn[disabled] .icon {
-  color: rgba(17, 36, 44, 0.4);
-  border-left-color: rgba(17, 36, 44, 0.4);
-}
+/* [EN] Ghost variant for Back buttons | [ZH] 用于返回按钮的幽灵直角块 */
+.ink-layer .menu-btn.ghost { color: var(--ink-faint) !important; border-color: var(--ink-faint) !important; }
+.ink-layer .menu-btn.ghost .icon { display: none !important; }
+.ink-layer .menu-btn.ghost:hover { color: #ff3344 !important; border-color: #ff3344 !important; }
 
-/* Ghost variant kept for the difficulty back button — simplified to fit ink-layer */
-.ink-layer .menu-btn.ghost { color: var(--ink-faint); border-color: var(--ink-faint); }
-.ink-layer .menu-btn.ghost .icon { display: none; }
-.ink-layer .menu-btn.ghost:hover { color: var(--ink); border-color: var(--ink); }
+.ink-layer .ink-footer { margin-top: auto; display: flex; justify-content: flex-end; align-items: flex-end; font-family: 'Share Tech Mono', monospace; font-size: 13px; letter-spacing: 0.10em; color: var(--ink); padding-top: 14px; }
+.ink-layer .ink-glyphs { position: absolute; left: 22px; bottom: 14px; font-family: 'Share Tech Mono', monospace; font-size: 12px; letter-spacing: 0.3em; color: var(--ink); opacity: 0.6; }
 
-/* Footer — version string in bottom-right of the panel */
-.ink-layer .ink-footer {
-  margin-top: auto;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 13px;
-  letter-spacing: 0.10em;
-  color: var(--ink);
-  padding-top: 14px;
-}
-
-/* Small glyphs bottom-left (the "…" mark from the reference) */
-.ink-layer .ink-glyphs {
-  position: absolute;
-  left: 22px;
-  bottom: 14px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 0.3em;
-  color: var(--ink);
-  opacity: 0.6;
-}
-.btn-note { font-size: 9px; opacity: 0.6; margin-left: 8px; letter-spacing: 1px; font-weight: 400; }
-/* In-projection footer text — hidden in favor of the corner version badge
-   (which sits OUTSIDE the projection area, on the dark wall). */
-.menu-foot { display: none; }
-/* (version badge moved INSIDE the projection panel — see .ink-footer) */
-
-/* ===== Difficulty select — ink-layer projected panel ===== */
-.diff-menu {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-}
-/* The .diff-overlay re-uses all .menu-overlay.ink-layer geometry +
-   perspective transform by being given the .ink-layer class in HTML.
-   Only override the bits that differ (text-align, no center). */
-.diff-overlay.ink-layer {
-  text-align: left;
-}
-
-/* Difficulty cards — 3 outlined cells with notched corners, same ink
-   aesthetic as menu-btn. Stack horizontally so it reads as a selector. */
+/* ─── [EN] DIFFICULTY CARDS GRID ─── [ZH] 任务参数选择卡片阵列 ─── */
 .ink-layer .diff-cards {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -597,862 +408,262 @@ canvas#oqw { position: absolute; inset: 0; width: 100%; height: 100%; pointer-ev
   margin: 8px 0 18px;
 }
 .ink-layer .diff-card {
-  --b: 1.6px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 16px 14px 14px;
-  background: transparent;
-  color: var(--ink);
-  border: var(--b) solid var(--ink);
+  background: #080c09 !important;
+  color: #33ff33 !important;
+  border: 1.5px solid #33ff33 !important;
   cursor: pointer;
   font-family: 'Share Tech Mono', monospace;
   text-align: left;
-  /* Same notched-corner clip-path as the menu buttons */
-  clip-path: polygon(
-    0 8px, 8px 0,
-    calc(100% - 8px) 0, 100% 8px,
-    100% calc(100% - 8px), calc(100% - 8px) 100%,
-    8px 100%, 0 calc(100% - 8px)
-  );
-  transition: color 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+  clip-path: none !important;
 }
-.ink-layer .diff-card .diff-level {
-  font-family: 'Saira Condensed', 'Oswald', 'Impact', sans-serif;
-  font-weight: 700;
-  font-size: 22px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink);
-  display: inline-block;
-}
-.ink-layer .diff-card .diff-level .br {
-  font-family: 'Share Tech Mono', monospace;
-  font-weight: 500;
-  font-size: 18px;
-  opacity: 0.7;
-  padding: 0 4px;
-}
-.ink-layer .diff-card .diff-stars {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 16px;
-  letter-spacing: 0.2em;
-  color: var(--ink-soft);
-  opacity: 0.85;
-}
-.ink-layer .diff-card .diff-desc {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  letter-spacing: 0.04em;
-  text-transform: none;
-}
-/* Hover state — red border + red text + red stars */
-.ink-layer .diff-card:hover {
-  color: var(--red-hover);
-  border-color: var(--red-hover);
-}
-.ink-layer .diff-card:hover .diff-level,
-.ink-layer .diff-card:hover .diff-stars,
-.ink-layer .diff-card:hover .diff-desc {
-  color: var(--red-hover);
-}
-/* Selected state — filled red bg + paper text */
+.ink-layer .diff-card .diff-level { font-family: 'Saira Condensed', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 0.06em; text-transform: uppercase; color: #33ff33 !important; }
+.ink-layer .diff-card .diff-level .br { font-family: 'Share Tech Mono', monospace; font-size: 18px; opacity: 0.7; padding: 0 4px; }
+.ink-layer .diff-card .diff-stars { font-family: 'Share Tech Mono', monospace; font-size: 16px; letter-spacing: 0.2em; color: #33ff33 !important; }
+.ink-layer .diff-card .diff-desc { font-family: 'Share Tech Mono', monospace; font-size: 13px; line-height: 1.5; color: rgba(51, 255, 51, 0.7) !important; text-transform: none; }
+
+/* [EN] Difficulty Cards Hover & Selected | [ZH] 选项卡片悬浮及锁定激活态 */
+.ink-layer .diff-card:hover { border-color: #ff3344 !important; }
+.ink-layer .diff-card:hover * { color: #ff3344 !important; }
 .ink-layer .diff-card.selected {
-  background: var(--red-hover);
-  border-color: var(--red-hover);
-  color: var(--paper);
+  background: #33ff33 !important; /* [EN] Reverse color fill | [ZH] 高亮反色填充 */
+  border-color: #33ff33 !important;
+  color: #000 !important;
 }
-.ink-layer .diff-card.selected .diff-level,
-.ink-layer .diff-card.selected .diff-stars,
-.ink-layer .diff-card.selected .diff-desc {
-  color: var(--paper);
-}
-.ink-layer .diff-card.selected .diff-level .br {
-  opacity: 0.9;
-}
+.ink-layer .diff-card.selected * { color: #000 !important; }
 
-/* Action buttons (back + confirm) — flex row at the bottom */
-.ink-layer .diff-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 6px;
-}
-.ink-layer .diff-actions .menu-btn {
-  height: 52px;
-}
-.ink-layer .diff-actions .menu-btn.ghost {
-  flex: 0 0 32%;
-  /* Override grid since ghost has no chev/icon */
-  grid-template-columns: 1fr;
-}
-.ink-layer .diff-actions .menu-btn:not(.ghost) {
-  flex: 1;
-}
-.ink-layer .diff-actions .menu-btn[disabled] {
-  opacity: 0.6;
-}
+/* [EN] Action buttons placement | [ZH] 底部确认区域按键定位布局 */
+.ink-layer .diff-actions { display: flex; gap: 12px; margin-top: 6px; }
+.ink-layer .diff-actions .menu-btn { height: 52px; }
+.ink-layer .diff-actions .menu-btn.ghost { flex: 0 0 32%; grid-template-columns: 1fr; }
+.ink-layer .diff-actions .menu-btn:not(.ghost) { flex: 1; }
 
-/* Hide legacy .diff-title since we now use .menu-title in the ink-layer */
-.diff-title { display: none; }
+/* ========================================================================== */
+/* 💬 [EN] TEXT GRAPHICS OVERRELOAD: NO MORE PORTRAITS, 100% MONITOR PANELS    */
+/* [ZH] 文本对话框体系重构：绝无人类头像空间，100% 极简化系统日志面板     */
+/* ========================================================================== */
 
-/* ===== Intro cutscene ===== */
 .intro { position: absolute; inset: 0; z-index: 10; }
-/* ==========================================================================
-   VISUAL-NOVEL DIALOGUE FRAME — shared between intro / tutorial / intel
-   --------------------------------------------------------------------------
-   Replaces the old thin bottom strip with a proper, readable VN-style panel
-   inspired by Dramatical Murder / anime-VN frames: cyan + pink angular border
-   accents, dark glass background, portrait in an angular frame on the left
-   (when present), large Saira Condensed body text, and a visible NEXT badge
-   so the player has a clear advance affordance.
 
-   Both .dialogue (intro) and .tutorial-dialog (Toto in tutorial) use these
-   visuals. .intel-dialog (memo popup) inherits the same panel chrome but
-   stays centered + smaller.
-   ========================================================================== */
-
-/* ---- Intro cutscene panel (bottom of the menu room) ----
-   The clip-path lives on ::before so the speaker chip and SKIP button can
-   poke above the panel's top edge (otherwise they'd be clipped). */
-.dialogue {
+.dialogue, .tutorial-dialog {
   position: absolute;
-  left: 4%; right: 4%;
-  bottom: 4%;
-  height: 28%;
-  z-index: 4;
-  padding: 22px 26px 22px 22px;
+  left: 4%; right: 4%; bottom: 4%;
+  height: 26%;
+  z-index: 40;
+  padding: 20px !important;
   display: flex;
   align-items: stretch;
   gap: 26px;
+  background: rgba(4, 6, 5, 0.95) !important; /* [EN] Darker solid block | [ZH] 强化深黑绿色实体色块 */
+  border: 1.5px solid #33ff33 !important;
+  clip-path: none !important;
+  box-shadow: 0 0 25px rgba(51, 255, 51, 0.15) !important;
   transform: none;
 }
-.dialogue::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(10,12,20,0.92) 0%, rgba(10,12,20,0.97) 100%);
-  border: 1.5px solid rgba(122, 208, 235, 0.55);
-  clip-path: polygon(
-    18px 0%, calc(100% - 18px) 0%, 100% 18px,
-    100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%,
-    0% calc(100% - 18px), 0% 18px
-  );
-  box-shadow: 0 -22px 50px rgba(0,0,0,0.5);
-  pointer-events: none;
-  z-index: 0;
+.dialogue::before, .tutorial-dialog::before {
+  display: none !important; /* [EN] Purge anime curved polygons | [ZH] 强行移除原本的多边形漫画视觉底层 */
 }
-.dialogue > * { position: relative; z-index: 1; }
+.dialogue > *, .tutorial-dialog > * { position: relative; z-index: 1; }
 
-/* Portrait frame on the left (when a portrait is set). Angular cut corners
-   like the references — not a circle. */
-.dialogue-portrait {
-  width: 240px; height: 100%;
-  object-fit: cover;
-  flex-shrink: 0;
-  border: 1.5px solid rgba(230, 57, 70, 0.7);
-  clip-path: polygon(
-    14px 0%, 100% 0%, 100% calc(100% - 14px),
-    calc(100% - 14px) 100%, 0% 100%, 0% 14px
-  );
-  background: rgba(20, 22, 30, 0.6);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+/* [EN] Force-kill portrait rendering spaces | [ZH] 赶尽杀绝任何残留的头像渲染框 */
+.dialogue-portrait, .tutorial-portrait {
+  display: none !important;
 }
-.dialogue-portrait.hidden-portrait { opacity: 0; transform: scale(0.92); }
-.dialogue-portrait:not([src]),
-.dialogue-portrait[src=""],
-.dialogue-portrait.missing { display: none; }
 
-/* Message body fills the rest of the panel. position:relative so the NEXT
-   badge + MESSAGE label can absolute-position relative to it. */
-.dialogue-body {
+.dialogue-body, .tutorial-body {
   flex: 1; min-width: 0;
   position: relative;
-  padding: 18px 86px 28px 8px;   /* room for NEXT badge + above-clip speaker */
+  padding: 10px 80px 10px 10px !important;
   display: flex; flex-direction: column;
   justify-content: center;
 }
-/* Speaker name as an angular chip that pokes above the panel's top-left.
-   Background color is set inline from JS (per speaker: red/blue/green/grey). */
-.dialogue-speaker {
+
+/* [EN] Floating Sub-System Chip Header | [ZH] 悬浮式安全指令子系统顶框 */
+.dialogue-speaker, .tutorial-speaker {
   position: absolute;
   top: -26px; left: 6px;
-  background: var(--red);  /* JS overrides per speaker */
-  color: #fff;
+  color: #000 !important;
+  background: #33ff33 !important; /* [EN] Green alert header block | [ZH] 代替原本红蓝人物色彩，统一归纳为系统绿 */
   font-family: 'Saira Condensed', sans-serif;
-  font-size: 22px; font-weight: 800;
-  letter-spacing: 5px;
-  padding: 8px 22px 6px;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-  clip-path: polygon(0% 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  font-size: 22px; font-weight: 800; letter-spacing: 5px;
+  padding: 6px 22px 4px;
+  clip-path: none !important;
   z-index: 3;
 }
-.dialogue-line {
-  font-family: 'Saira Condensed', sans-serif;
-  font-size: 34px; font-weight: 500;
-  line-height: 1.35; letter-spacing: 0.5px;
-  color: #f0f4f8; flex: 1;
-  white-space: pre-wrap;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+.dialogue-line, .tutorial-line {
+  font-family: var(--font-mono) !important; /* [EN] Mono script scrolling | [ZH] 强制采用计算机等宽数据流字体 */
+  font-size: 30px; font-weight: 500; line-height: 1.4; letter-spacing: 0.5px;
+  color: #33ff33 !important; /* [EN] Fluorescent green log output | [ZH] 文本全面字符绿化 */
+  flex: 1; white-space: pre-wrap;
 }
-.dialogue-hint { display: none; }  /* small advance-hint removed — NEXT badge IS the affordance */
-/* Bottom-right "MESSAGE" subtitle tag — small typography flourish */
-.dialogue-body::before {
-  content: 'MESSAGE';
+
+/* [EN] Decorative Prompt text | [ZH] 右底角装饰性代码标记 */
+.dialogue-body::before, .tutorial-body::before, .intel-frame::before {
+  content: 'CORE_SYSTEM_LOG' !important;
   position: absolute; right: 78px; bottom: 4px;
-  font-family: var(--font-mono); font-size: 10px;
-  letter-spacing: 6px; color: rgba(244, 211, 94, 0.55);
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 6px;
+  color: rgba(51, 255, 51, 0.3) !important;
   pointer-events: none;
 }
-/* Yellow NEXT circle on the right of the body — visible advance affordance.
-   Clicking anywhere on the dialog advances; this is just the affordance. */
-.dialogue-body::after {
-  content: 'NEXT';
-  position: absolute; right: 6px; top: 50%;
-  transform: translateY(-50%);
-  width: 58px; height: 58px;
-  border: 2px solid #F4D35E;
+
+/* [EN] Flashing Matrix Next Indicator Circle | [ZH] 绿光循环微闪矩阵继续推进指示环 */
+.dialogue-body::after, .tutorial-body::after, .intel-frame::after {
+  content: 'EXEC' !important;
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 54px; height: 54px;
+  border: 2px solid #33ff33 !important;
   border-radius: 50%;
-  font-family: var(--font-mono); font-size: 13px;
-  letter-spacing: 2px; font-weight: 700;
-  color: #F4D35E;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; font-weight: 700;
+  color: #33ff33 !important;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 18px rgba(244, 211, 94, 0.35);
+  box-shadow: 0 0 12px rgba(51, 255, 51, 0.3) !important;
   pointer-events: none;
   animation: vn-next-pulse 1.6s ease-in-out infinite;
 }
 @keyframes vn-next-pulse {
-  0%, 100% { box-shadow: 0 0 12px rgba(244, 211, 94, 0.25); }
-  50%      { box-shadow: 0 0 22px rgba(244, 211, 94, 0.55); }
+  0%, 100% { opacity: 0.5; box-shadow: 0 0 8px rgba(51, 255, 51, 0.2); }
+  50%      { opacity: 1.0; box-shadow: 0 0 16px rgba(51, 255, 51, 0.5); }
 }
 
-/* SKIP button — top-right of the panel, clearly visible (the old style had it
-   nearly the same color as the background). */
-.dialogue-skip-btn {
+/* [EN] Skip Button - Alarm Red Rectangular Design | [ZH] 强制终止/跳过连线按键 - 警报直角红色方块 */
+.dialogue-skip-btn, .tutorial-skip {
   position: absolute;
-  right: 6%; top: -52px;
-  background: rgba(10, 12, 20, 0.92);
-  border: 2px solid rgba(230, 57, 70, 0.85);
-  color: #ffd5d8;
-  font-family: var(--font-mono);
-  font-size: 15px; font-weight: 700;
-  letter-spacing: 3px;
-  padding: 12px 24px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  z-index: 5;
+  right: 4%; top: -45px;
+  background: #040605 !important;
+  border: 1.5px solid #ff3344 !important;
+  color: #ff3344 !important;
+  font-family: var(--font-mono); font-size: 14px; font-weight: 700; letter-spacing: 3px;
+  padding: 10px 20px; cursor: pointer; transition: all 0.2s ease; z-index: 45;
 }
-.dialogue-skip-btn:hover {
-  color: #fff;
-  background: rgba(230, 57, 70, 0.85);
-  box-shadow: 0 0 14px rgba(230, 57, 70, 0.5);
+.dialogue-skip-btn:hover, .tutorial-skip:hover {
+  color: #000 !important;
+  background: #ff3344 !important;
+  box-shadow: 0 0 14px rgba(255, 51, 68, 0.5) !important;
 }
 
-/* ---- Tutorial dialog (Toto narrating) — same look as intro panel ---- */
-.tutorial-dialog {
-  position: absolute;
-  left: 4%; right: 4%; bottom: 4%;
-  height: 24%;
-  z-index: 40;
-  padding: 22px 26px 22px 22px;
-  display: flex;
-  align-items: stretch;
-  gap: 26px;
-}
-.tutorial-dialog::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(10,12,20,0.92) 0%, rgba(10,12,20,0.97) 100%);
-  border: 1.5px solid rgba(122, 208, 235, 0.55);
-  clip-path: polygon(
-    18px 0%, calc(100% - 18px) 0%, 100% 18px,
-    100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%,
-    0% calc(100% - 18px), 0% 18px
-  );
-  box-shadow: 0 -22px 50px rgba(0,0,0,0.5);
-  pointer-events: none;
-  z-index: 0;
-}
-.tutorial-dialog > * { position: relative; z-index: 1; }
-.tutorial-dialog.hidden { display: none; }
-.tutorial-portrait {
-  width: 200px; height: 100%;
-  object-fit: cover;
-  flex-shrink: 0;
-  border: 1.5px solid rgba(230, 57, 70, 0.7);
-  clip-path: polygon(
-    14px 0%, 100% 0%, 100% calc(100% - 14px),
-    calc(100% - 14px) 100%, 0% 100%, 0% 14px
-  );
-  background: rgba(20, 22, 30, 0.6);
-}
-.tutorial-body {
-  flex: 1; min-width: 0;
-  position: relative;
-  padding: 18px 86px 22px 8px;
-  display: flex; flex-direction: column;
-  justify-content: center;
-}
-/* Tutorial only ever shows TOTO — chip is permanently red. Same angular
-   chip shape as the intro panel for visual consistency. */
-.tutorial-speaker {
-  position: absolute;
-  top: -26px; left: 6px;
-  background: var(--red);
-  color: #fff;
-  font-family: 'Saira Condensed', sans-serif;
-  font-size: 22px; font-weight: 800;
-  letter-spacing: 5px;
-  padding: 8px 22px 6px;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-  clip-path: polygon(0% 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-  z-index: 3;
-}
-.tutorial-line {
-  font-family: 'Saira Condensed', sans-serif;
-  font-size: 32px; font-weight: 500;
-  line-height: 1.35; letter-spacing: 0.5px;
-  color: #f0f4f8; flex: 1;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
-}
-.tutorial-hint { display: none; }
-.tutorial-body::before {
-  content: 'MESSAGE';
-  position: absolute; right: 78px; bottom: 4px;
-  font-family: var(--font-mono); font-size: 10px;
-  letter-spacing: 6px; color: rgba(244, 211, 94, 0.55);
-  pointer-events: none;
-}
-.tutorial-body::after {
-  content: 'NEXT';
-  position: absolute; right: 6px; top: 50%;
-  transform: translateY(-50%);
-  width: 54px; height: 54px;
-  border: 2px solid #F4D35E;
-  border-radius: 50%;
-  font-family: var(--font-mono); font-size: 12px;
-  letter-spacing: 2px; font-weight: 700;
-  color: #F4D35E;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 16px rgba(244, 211, 94, 0.3);
-  pointer-events: none;
-  animation: vn-next-pulse 1.6s ease-in-out infinite;
-}
-.tutorial-skip {
-  position: absolute;
-  right: 4%; top: -38px;
-  background: rgba(10, 12, 20, 0.92);
-  border: 2px solid rgba(230, 57, 70, 0.85);
-  color: #ffd5d8;
-  font-family: var(--font-mono);
-  font-size: 15px; font-weight: 700;
-  letter-spacing: 3px;
-  padding: 12px 24px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  z-index: 41;
-}
-.tutorial-skip:hover {
-  color: #fff;
-  background: rgba(230, 57, 70, 0.85);
-  box-shadow: 0 0 14px rgba(230, 57, 70, 0.5);
-}
-
-/* Cutscene fade-to-white transition into Level 1 (covers full browser) */
-.cutscene-flash {
-  position: fixed;
-  inset: 0;
-  background: #fff;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.55s ease-in;
-  z-index: 1000;
-}
+/* [EN] Fullscreen white screen flash modifier | [ZH] 关卡加载全局转场渐变层 */
+.cutscene-flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; transition: opacity 0.5s ease-in; z-index: 1000; }
 .cutscene-flash.active { opacity: 1; }
 
-/* ===== Modals (settings, help) — ink-layer projection panels ===== */
-/* The .modal element is a transparent wrapper. The modal-panel.ink-layer
-   inside it picks up the same positioning + transform as the main menu,
-   so the modal looks like the projector switched to a different slide. */
-.modal {
-  position: absolute;
-  inset: 0;
-  z-index: 30;
-  display: block;
-  background: transparent;
-  backdrop-filter: none;
-}
-/* Hide main menu / diff menu content when ANY modal is open so the two
-   ink-layer projections don't stack on the same wall area. */
+/* ========================================================================== */
+/* 🛠️ [EN] MODAL PANELS INTERACTION COVERAGE                                  */
+/* [ZH] 模态设置/帮助面板全局交互层覆盖                                    */
+/* ========================================================================== */
+
+.modal { position: absolute; inset: 0; z-index: 30; display: block; background: transparent; backdrop-filter: none; }
 .canvas-wrap:has(.modal:not(.hidden)) #main-menu .menu-overlay,
 .canvas-wrap:has(.modal:not(.hidden)) #diff-menu .diff-overlay {
   visibility: hidden;
 }
-.modal-panel { /* legacy panel hidden — replaced by .modal-panel.ink-layer */ }
-.modal-panel:not(.ink-layer) { display: none; }
-.modal-tag { display: none; }
-.modal-panel h2 { display: none; }
 
-/* Settings rows inside the ink-layer */
-.ink-layer .settings-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin: 6px 0 18px;
-}
+.ink-layer .settings-rows { display: flex; flex-direction: column; gap: 14px; margin: 6px 0 18px; max-width: 600px; }
 .ink-layer .setting-row {
-  --b: 1.6px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 12px 14px;
-  border: var(--b) solid var(--ink);
-  /* Same notched corners as menu buttons */
-  clip-path: polygon(
-    0 8px, 8px 0,
-    calc(100% - 8px) 0, 100% 8px,
-    100% calc(100% - 8px), calc(100% - 8px) 100%,
-    8px 100%, 0 calc(100% - 8px)
-  );
+  display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 12px 14px;
+  border: 1.5px solid #33ff33 !important;
+  clip-path: none !important;
 }
-.ink-layer .setting-label {
-  font-family: 'Saira Condensed', 'Oswald', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: 0.06em;
-  color: var(--ink);
-  text-transform: uppercase;
-}
-.ink-layer .diff-options {
-  display: flex;
-  gap: 8px;
-}
+.ink-layer .setting-label { font-family: 'Saira Condensed', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase; }
+.ink-layer .diff-options { display: flex; gap: 8px; }
 .ink-layer .diff-btn {
-  --b: 1.4px;
-  background: transparent;
-  color: var(--ink);
-  border: var(--b) solid var(--ink);
-  padding: 8px 18px;
-  font-family: 'Saira Condensed', 'Oswald', sans-serif;
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  border-radius: 0;
-  text-transform: uppercase;
-  transition: color 0.12s, border-color 0.12s, background 0.12s;
-  clip-path: polygon(
-    0 4px, 4px 0,
-    calc(100% - 4px) 0, 100% 4px,
-    100% calc(100% - 4px), calc(100% - 4px) 100%,
-    4px 100%, 0 calc(100% - 4px)
-  );
+  background: transparent; color: #33ff33 !important; border: 1.5px solid #33ff33 !important;
+  padding: 8px 18px; font-family: 'Saira Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.06em; cursor: pointer; border-radius: 0; text-transform: uppercase; transition: all 0.12s;
+  clip-path: none !important;
 }
-.ink-layer .diff-btn:hover {
-  color: var(--red-hover);
-  border-color: var(--red-hover);
-}
-.ink-layer .diff-btn.active {
-  background: var(--ink);
-  color: var(--paper);
-  border-color: var(--ink);
-}
+.ink-layer .diff-btn:hover { color: #ff3344 !important; border-color: #ff3344 !important; }
+.ink-layer .diff-btn.active { background: #33ff33 !important; color: #000 !important; border-color: #33ff33 !important; }
 
-/* Help list inside the ink-layer */
-.ink-layer .help-list {
-  list-style: none;
-  padding: 0;
-  margin: 8px 0 18px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 15px;
-  line-height: 1.65;
-  color: var(--ink);
-  letter-spacing: 0.02em;
-}
-.ink-layer .help-list li {
-  padding-left: 22px;
-  position: relative;
-  margin-bottom: 8px;
-}
-.ink-layer .help-list li::before {
-  content: '▸';
-  color: var(--red-hover);
-  position: absolute;
-  left: 4px;
-  font-size: 14px;
-  top: 1px;
-}
-.ink-layer .help-list kbd {
-  background: rgba(17, 36, 44, 0.10);
-  border: 1px solid rgba(17, 36, 44, 0.45);
-  padding: 1px 6px;
-  border-radius: 2px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 13px;
-  color: var(--ink);
-}
-.ink-layer .help-list .hl {
-  color: var(--red-hover);
-  font-weight: 700;
-}
-.ink-layer .help-list em {
-  color: var(--ink-faint);
-  font-style: normal;
-}
-
-/* Legacy close button hidden — replaced by ink-layer .menu-btn */
-.modal-close-btn { display: none; }
+/* [EN] Field Manual Text Customizing | [ZH] 核心操作指南数据列表样式 */
+.ink-layer .help-list { list-style: none; padding: 0; margin: 8px 0 18px; font-family: 'Share Tech Mono', monospace; font-size: 15px; line-height: 1.65; color: var(--ink); letter-spacing: 0.02em; }
+.ink-layer .help-list li { padding-left: 22px; position: relative; margin-bottom: 8px; text-transform: none; }
+.ink-layer .help-list li::before { content: '▸'; color: #ff3344 !important; position: absolute; left: 4px; font-size: 14px; top: 1px; }
+.ink-layer .help-list kbd { background: rgba(51, 255, 51, 0.1); border: 1px solid rgba(51, 255, 51, 0.45); padding: 1px 6px; border-radius: 2px; font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #33ff33 !important; }
+.ink-layer .help-list .hl { color: #ff3344 !important; font-weight: 700; }
+.ink-layer .help-list em { color: rgba(51, 255, 51, 0.4) !important; font-style: normal; }
 
 /* ========================================================================== */
-/* ONBOARDING TOOLTIPS — centered modal with dim backdrop; pauses gameplay     */
+/* ⚠️ [EN] LOCAL ONBOARDING TIP BOX MODALS                                    */
+/* [ZH] 本地自动化训练提示信息框组件                                       */
 /* ========================================================================== */
-.onboarding-tip {
-  position: absolute;
-  inset: 0;                              /* covers the entire canvas-wrap */
-  background: rgba(0, 0, 0, 0.65);       /* dim the game behind */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 70;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  cursor: pointer;
-}
-.onboarding-tip.show {
-  opacity: 1;
-  pointer-events: auto;
-}
+.onboarding-tip { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.65); display: flex; align-items: center; justify-content: center; z-index: 70; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; cursor: pointer; }
+.onboarding-tip.show { opacity: 1; pointer-events: auto; }
 .onboarding-tip.hidden { display: none; }
-.tip-card {
-  background: rgba(10, 12, 18, 0.97);
-  border: 2px solid var(--red);
-  border-left: 6px solid var(--red);
-  padding: 32px 48px 24px;
-  font-family: var(--font-mono);
-  color: #f5f5f5;
-  max-width: 720px;
-  min-width: 420px;
-  box-shadow:
-    0 0 60px rgba(230, 57, 70, 0.35),
-    0 12px 50px rgba(0, 0, 0, 0.7);
-  transform: scale(0.92);
-  transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
-  border-radius: 4px;
-  position: relative;
-  text-align: left;
-}
+.tip-card { background: rgba(4, 6, 5, 0.98); border: 2px solid #ff3344 !important; border-left: 6px solid #ff3344 !important; padding: 32px 48px 24px; font-family: var(--font-mono); color: #f5f5f5; max-width: 720px; min-width: 420px; box-shadow: 0 0 40px rgba(255, 51, 68, 0.25), 0 12px 50px rgba(0, 0, 0, 0.7); transform: scale(0.92); transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1); border-radius: 4px; position: relative; text-align: left; }
 .onboarding-tip.show .tip-card { transform: scale(1); }
-.tip-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 18px;
-}
-.tip-card .tip-arrow {
-  color: var(--red);
-  font-size: 28px;
-  line-height: 1;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-.tip-card .tip-text {
-  color: #f0f2f5;
-  font-size: 19px;
-  line-height: 1.55;
-  letter-spacing: 0.3px;
-}
-.tip-card .tip-text .hl {
-  color: var(--yellow);
-  font-weight: bold;
-}
-.tip-card .tip-hint {
-  margin-top: 22px;
-  font-size: 10px;
-  letter-spacing: 3px;
-  color: #6a6a72;
-  text-align: center;
-  text-transform: uppercase;
-  border-top: 1px solid rgba(230, 57, 70, 0.15);
-  padding-top: 14px;
-  animation: tip-hint-pulse 1.8s ease-in-out infinite;
-}
-@keyframes tip-hint-pulse {
-  0%, 100% { opacity: 0.45; }
-  50%      { opacity: 0.95; }
-}
+.tip-row { display: flex; align-items: flex-start; gap: 18px; }
+.tip-card .tip-arrow { color: #ff3344 !important; font-size: 28px; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+.tip-card .tip-text { color: #33ff33 !important; font-size: 19px; line-height: 1.55; letter-spacing: 0.3px; }
+.tip-card .tip-text .hl { color: #ff3344 !important; font-weight: bold; }
+.tip-card .tip-hint { margin-top: 22px; font-size: 10px; letter-spacing: 3px; color: rgba(51, 255, 51, 0.4) !important; text-align: center; text-transform: uppercase; border-top: 1px solid rgba(51, 255, 51, 0.15); padding-top: 14px; animation: tip-hint-pulse 1.8s ease-in-out infinite; }
+@keyframes tip-hint-pulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 0.95; } }
 
 /* ========================================================================== */
-/* MALWARE INSTALL + SHORT-CIRCUIT END SEQUENCE                                */
+/* 💾 [EN] MALWARE INJECTION PROGRESS PANEL                                   */
+/* [ZH] 恶意软件载荷静默注入排程面板进度条                                 */
 /* ========================================================================== */
 .end-sequence { position: absolute; inset: 0; pointer-events: none; z-index: 60; }
 .end-sequence.hidden { display: none; }
-
-.malware-install {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
+.malware-install { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.3s ease; }
 .malware-install.show { opacity: 1; }
-.malware-frame {
-  background: rgba(12, 12, 14, 0.96);
-  border: 1px solid var(--red);
-  padding: 22px 32px;
-  font-family: var(--font-mono);
-  color: #f5f5f5;
-  min-width: 380px;
-  box-shadow: 0 0 30px rgba(230, 57, 70, 0.35);
-}
-.malware-tag {
-  font-size: 10px;
-  letter-spacing: 4px;
-  color: var(--red);
-  margin-bottom: 14px;
-}
-.malware-line {
-  font-size: 12px;
-  color: #cccccf;
-  margin-bottom: 16px;
-  letter-spacing: 1px;
-}
-.malware-bar {
-  width: 100%;
-  height: 6px;
-  background: #1a1a1f;
-  border: 1px solid #2a2a2e;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-.malware-fill {
-  width: 0%;
-  height: 100%;
-  background: var(--red);
-  box-shadow: 0 0 8px var(--red);
-  transition: width 0.1s linear;
-}
-.malware-pct {
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: var(--red);
-  text-align: right;
-}
+.malware-frame { background: rgba(4, 6, 5, 0.96); border: 1.5px solid #ff3344 !important; padding: 22px 32px; font-family: var(--font-mono); color: #33ff33; box-shadow: 0 0 30px rgba(255, 51, 68, 0.2); }
+.malware-tag { font-size: 10px; letter-spacing: 4px; color: #ff3344 !important; margin-bottom: 14px; }
+.malware-line { font-size: 12px; color: #33ff33; margin-bottom: 16px; letter-spacing: 1px; }
+.malware-bar { width: 100%; height: 8px; background: #000; border: 1px solid rgba(51, 255, 51, 0.3); overflow: hidden; margin-bottom: 8px; }
+.malware-fill { width: 0%; height: 100%; background: #ff3344 !important; box-shadow: 0 0 8px #ff3344; transition: width 0.1s linear; }
+.malware-pct { font-size: 11px; letter-spacing: 2px; color: #ff3344 !important; text-align: right; }
 
-/* Glitch wipe scanline — sweeps top→bottom on short-circuit completion */
-.glitch-sweep {
-  position: absolute;
-  left: 0; right: 0;
-  top: -8%;
-  height: 8%;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.0)  0%,
-    rgba(230, 57, 70, 0.25)   40%,
-    rgba(255, 255, 255, 0.85) 50%,
-    rgba(74, 123, 200, 0.25)  60%,
-    rgba(255, 255, 255, 0.0)  100%
-  );
-  mix-blend-mode: screen;
-  opacity: 0;
-  pointer-events: none;
-}
+.glitch-sweep { position: absolute; left: 0; right: 0; top: -8%; height: 8%; background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(230,57,70,0.25) 40%, rgba(255,255,255,0.85) 50%, rgba(74,123,200,0.25) 60%, rgba(255,255,255,0) 100%); mix-blend-mode: screen; opacity: 0; pointer-events: none; }
 .glitch-sweep.run { animation: glitch-wipe 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
-@keyframes glitch-wipe {
-  0%   { top: -10%; opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { top: 108%; opacity: 0; }
-}
+@keyframes glitch-wipe { 0% { top: -10%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 108%; opacity: 0; } }
 
-/* Post-mission L1 — dimmed, desaturated, marked SECURED.
-   Applied to .canvas-wrap when state.mission === 'secured'. */
-.canvas-wrap.post-mission #oqw {
-  filter: saturate(0.45) brightness(0.7) contrast(0.9);
-  transition: filter 1.2s ease;
-}
-.canvas-wrap.post-mission::after {
-  content: '[ SECURED ]';
-  position: absolute;
-  top: 18px; right: 18px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 4px;
-  color: var(--green);
-  border: 1px solid var(--green);
-  padding: 5px 10px;
-  background: rgba(12, 12, 14, 0.7);
-  pointer-events: none;
-  z-index: 40;
-  opacity: 0.85;
-}
+/* [EN] Post-mission Level 1 Secured state masking | [ZH] 核心扇区成功篡改后的降低亮度饱和度机制 */
+.canvas-wrap.post-mission #oqw { filter: saturate(0.25) brightness(0.6) contrast(0.95); transition: filter 1.2s ease; }
+.canvas-wrap.post-mission::after { content: '[ SECTOR SECURED ]'; position: absolute; top: 18px; right: 18px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 4px; color: var(--green); border: 1px solid var(--green); padding: 5px 10px; background: rgba(4, 6, 5, 0.8); pointer-events: none; z-index: 40; opacity: 0.85; }
 
 /* ========================================================================== */
-/* INTEL DIALOG — in-game popup when player uncovers a hidden memo            */
+/* 🔓 [EN] IN-GAME COMPONENT INTERCEPT MEMO PANEL                             */
+/* [ZH] 游戏进行中核心加密元件解密弹出框                                   */
 /* ========================================================================== */
-.intel-dialog {
-  position: absolute;
-  left: 50%;
-  bottom: 8%;
-  transform: translateX(-50%);
-  z-index: 70;
-  opacity: 0;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  pointer-events: none;
-  width: min(960px, 84%);
-}
+.intel-dialog { position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%); z-index: 70; opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; pointer-events: none; width: min(960px, 84%); }
 .intel-dialog.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; cursor: pointer; }
 .intel-dialog.hidden { display: none; }
-.intel-frame {
-  position: relative;
-  padding: 28px 96px 32px 28px;
-  font-family: var(--font-mono);
-  color: #f0f4f8;
-}
-.intel-frame::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(10,12,20,0.94) 0%, rgba(10,12,20,0.98) 100%);
-  border: 1.5px solid rgba(122, 208, 235, 0.55);
-  clip-path: polygon(
-    18px 0%, calc(100% - 18px) 0%, 100% 18px,
-    100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%,
-    0% calc(100% - 18px), 0% 18px
-  );
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
-  pointer-events: none;
-  z-index: 0;
-}
+.intel-frame { position: relative; padding: 28px 96px 32px 28px; font-family: var(--font-mono); color: #33ff33; }
+.intel-frame::before { content: ''; position: absolute; inset: 0; background: rgba(4, 6, 5, 0.96) !important; border: 1.5px solid #33ff33 !important; clip-path: none !important; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6); pointer-events: none; z-index: 0; }
 .intel-frame > * { position: relative; z-index: 1; }
-.intel-tag {
-  position: absolute;
-  top: -22px; left: 6px;
-  background: var(--red);
-  color: #fff;
-  font-family: 'Saira Condensed', sans-serif;
-  font-size: 18px; font-weight: 800;
-  letter-spacing: 4px;
-  padding: 6px 18px 4px;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-  clip-path: polygon(0% 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-  z-index: 3;
-  white-space: nowrap;
-}
-.intel-line {
-  font-family: 'Saira Condensed', sans-serif;
-  font-size: 30px; font-weight: 500;
-  letter-spacing: 0.5px;
-  line-height: 1.4;
-  color: #f0f4f8;
-  min-height: 60px;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
-}
-.intel-hint { display: none; }
-/* Same MESSAGE/NEXT decorations as the main dialog */
-.intel-frame::before {
-  content: 'MESSAGE';
-  position: absolute; right: 100px; bottom: 8px;
-  font-family: var(--font-mono); font-size: 10px;
-  letter-spacing: 6px; color: rgba(244, 211, 94, 0.55);
-  pointer-events: none;
-}
-.intel-frame::after {
-  content: 'NEXT';
-  position: absolute; right: 18px; top: 50%;
-  transform: translateY(-50%);
-  width: 58px; height: 58px;
-  border: 2px solid #F4D35E;
-  border-radius: 50%;
-  font-family: var(--font-mono); font-size: 13px;
-  letter-spacing: 2px; font-weight: 700;
-  color: #F4D35E;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 18px rgba(244, 211, 94, 0.35);
-  pointer-events: none;
-  animation: vn-next-pulse 1.6s ease-in-out infinite;
-}
+.intel-tag { position: absolute; top: -22px; left: 6px; background: #33ff33 !important; color: #000 !important; font-family: 'Saira Condensed', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 4px; padding: 6px 18px 4px; clip-path: none !important; z-index: 3; white-space: nowrap; }
+.intel-line { font-family: 'Saira Condensed', sans-serif; font-size: 30px; font-weight: 500; letter-spacing: 0.5px; line-height: 1.4; color: #33ff33 !important; min-height: 60px; }
 
 /* ========================================================================== */
-/* POST-MISSION BANNER — minimal toast after L1 win (replaces results screen)  */
+/* 🚀 [EN] TOP TOAST NOTIFICATION FOR LINK SWITCHING                          */
+/* [ZH] 顶部轻量化节点切入状态通知弹窗                                     */
 /* ========================================================================== */
-.post-mission-banner {
-  position: absolute;
-  left: 50%;
-  top: 14px;
-  transform: translateX(-50%);
-  background: rgba(8, 8, 10, 0.9);
-  border: 1px solid var(--green);
-  padding: 8px 18px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 1.5px;
-  color: #cccccf;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  z-index: 45;
-  opacity: 0;
-  transition: opacity 0.6s ease;
-}
+.post-mission-banner { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); background: rgba(4, 6, 5, 0.95); border: 1px solid var(--green); padding: 8px 18px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 1.5px; color: #33ff33; display: flex; align-items: center; gap: 18px; z-index: 45; opacity: 0; transition: opacity 0.6s ease; }
 .post-mission-banner.show { opacity: 1; }
 .post-mission-banner.hidden { display: none; }
 .post-mission-banner .pm-tag { color: var(--green); letter-spacing: 3px; }
-.post-mission-banner .pm-tab { color: var(--red); font-weight: bold; }
-.post-mission-banner .pm-hint { color: #6a6a72; font-size: 10px; }
-.post-mission-banner kbd {
-  background: #1a1a1f;
-  border: 1px solid #2a2a2e;
-  padding: 1px 5px;
-  border-radius: 3px;
-  font-size: 9px;
-  color: #ccc;
-}
+.post-mission-banner .pm-tab { color: #ff3344; font-weight: bold; }
+.post-mission-banner .pm-hint { color: rgba(51, 255, 51, 0.5); font-size: 10px; }
+.post-mission-banner kbd { background: #000; border: 1px solid rgba(51, 255, 51, 0.3); padding: 1px 5px; border-radius: 3px; font-size: 9px; color: #33ff33; }
 
-/* ===== Name prompt modal — codename entry between difficulty & cutscene ===== */
-.name-row {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 30px auto 20px;
-  width: min(560px, 80%);
-}
+/* ========================================================================== */
+/* 🔑 [EN] OPERATION TARGET SEED ENTRY REGISTRATION PANEL                     */
+/* [ZH] 指定代理路由节点种子密钥配置弹窗                                   */
+/* ========================================================================== */
+.name-row { display: flex; flex-direction: column; align-items: center; margin: 30px auto 20px; width: min(560px, 80%); }
 #name-input {
   width: 100%;
-  background: rgba(8, 10, 16, 0.6);
-  border: 1.5px solid rgba(122, 208, 235, 0.5);
-  color: #f0f4f8;
-  font-family: 'Saira Condensed', sans-serif;
-  font-size: 32px; font-weight: 500;
-  letter-spacing: 3px;
-  padding: 14px 22px;
-  outline: none;
-  text-align: center;
-  text-transform: uppercase;
-  clip-path: polygon(
-    12px 0%, calc(100% - 12px) 0%, 100% 12px,
-    100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%,
-    0% calc(100% - 12px), 0% 12px
-  );
-  caret-color: var(--red);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: #000 !important;
+  border: 1.5px solid #33ff33 !important;
+  color: #33ff33 !important;
+  font-family: 'Share Tech Mono', monospace !important;
+  font-size: 32px; font-weight: 500; letter-spacing: 3px; padding: 14px 22px; outline: none; text-align: center; text-transform: uppercase;
+  clip-path: none !important;
+  caret-color: #ff3344;
+  transition: all 0.2s ease;
 }
-#name-input::placeholder {
-  color: rgba(122, 208, 235, 0.4);
-  font-weight: 400; letter-spacing: 2px;
-  text-transform: none;
-}
-#name-input:focus {
-  border-color: var(--red);
-  box-shadow: 0 0 18px rgba(230, 57, 70, 0.3);
-}
-.name-note {
-  margin-top: 14px;
-  font-family: var(--font-mono);
-  font-size: 12px; letter-spacing: 2px;
-  color: rgba(122, 208, 235, 0.7);
-  transition: color 0.2s ease;
-}
-.name-note.ready {
-  color: rgba(45, 134, 89, 0.95);
-}
+#name-input::placeholder { color: rgba(51, 255, 51, 0.25) !important; font-weight: 400; letter-spacing: 2px; text-transform: none; }
+#name-input:focus { border-color: #ff3344 !important; box-shadow: 0 0 18px rgba(255, 51, 68, 0.4) !important; }
+.name-note { margin-top: 14px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; color: rgba(51, 255, 51, 0.6); transition: color 0.2s ease; }
+.name-note.ready { color: #ff3344 !important; }
