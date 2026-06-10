@@ -29,13 +29,13 @@ export function getDifficulty() {
 // harmless page components (the search bar still shows, it just won't shoot).
 // Later levels re-enable more of them for escalating difficulty.
 export const L1 = {
-  activeChasingRecs: 1,    // 0..2 — how many sidebar cards actually chase
-  gunShooter:     true,    // the signature threat — kept
-  shootingSearch: false,   // deferred to later levels
-  fallingComment: false,   // deferred
-  explodingLike:  false,   // deferred
-  crushingCookie: false,   // deferred
-  gazeEnforcer:   false,   // the lethal cursor hunter — debuts in L2, off in L1
+  activeChasingRecs: 1,    // Used as boolean in STG to allow spawning
+  gunShooter:     true,
+  shootingSearch: true,
+  fallingComment: true,
+  explodingLike:  true,
+  crushingCookie: true,
+  gazeEnforcer:   false,   // Keep disabled to avoid cursor mechanic
 };
 
 // Player
@@ -46,7 +46,7 @@ export const PLAYER = {
   maxSize: 200,
   deathSize: 25,
   baseSpeed: 230,
-  invulnDuration: 0.85,
+  invulnDuration: 1.5,
   hitFlashDuration: 0.3,
 };
 

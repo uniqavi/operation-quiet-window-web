@@ -120,7 +120,7 @@ export function drawAvatar(ctx, agent, state) {
 
   ctx.fillStyle = isSpent ? '#666' : (isActive ? '#E63946' : '#4A7BC8');
   ctx.beginPath();
-  ctx.arc(layout.account.x + 12, layout.account.y + 12, 11, 0, Math.PI * 2);
+  ctx.arc(agent.baseX, agent.baseY, 11, 0, Math.PI * 2);
   ctx.fill();
   ctx.strokeStyle = isActive ? '#fff' : '#1a1a1f';
   ctx.lineWidth = isActive ? 1.5 : 1;
@@ -129,7 +129,7 @@ export function drawAvatar(ctx, agent, state) {
   ctx.font = 'bold 11px ui-monospace, monospace';
   ctx.textBaseline = 'middle';
   ctx.textAlign = 'center';
-  ctx.fillText(isSpent ? '✕' : 'U', layout.account.x + 12, layout.account.y + 13);
+  ctx.fillText(isSpent ? '✕' : 'U', agent.baseX, agent.baseY + 1);
   ctx.textAlign = 'left';
 
   if (isAwake || isAiming) {
@@ -137,7 +137,7 @@ export function drawAvatar(ctx, agent, state) {
     ctx.strokeStyle = 'rgba(230,57,70,' + (isAiming ? 0.7 : 0.5) + ')';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(layout.account.x + 12, layout.account.y + 12, 14 * pulse, 0, Math.PI * 2);
+    ctx.arc(agent.baseX, agent.baseY, 14 * pulse, 0, Math.PI * 2);
     ctx.stroke();
   }
   if (isActive) {
@@ -147,9 +147,9 @@ export function drawAvatar(ctx, agent, state) {
       ctx.font = 'bold 9px ui-monospace, monospace';
       ctx.textBaseline = 'middle';
       const w = ctx.measureText(txt).width + 12;
-      ctx.fillRect(layout.account.x - w + 30, layout.account.y + 30, w, 16);
+      ctx.fillRect(agent.baseX - w + 18, agent.baseY + 18, w, 16);
       ctx.fillStyle = '#E63946';
-      ctx.fillText(txt, layout.account.x - w + 36, layout.account.y + 38);
+      ctx.fillText(txt, agent.baseX - w + 24, agent.baseY + 26);
     }
   }
   drawArm(ctx, agent, state);

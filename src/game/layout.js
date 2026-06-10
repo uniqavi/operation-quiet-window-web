@@ -1,20 +1,32 @@
 import { PW, PH } from '../config.js';
 
-// Static slot geometry — never mutated
-export const recSlots = (() => {
-  const arr = [];
-  for (let i = 0; i < 8; i++) arr.push({ x: 620, y: 70 + i * 96, w: 320, h: 86, idx: i });
-  return arr;
-})();
+export const REC_X = 620;
+export const REC_W = 320;
+export const REC_H = 86;
 
-export const commentSlots = (() => {
-  const arr = [];
-  for (let i = 0; i < 4; i++) arr.push({ x: 24, y: 620 + i * 100, w: 580, h: 88, idx: i });
-  return arr;
-})();
+export const COMMENT_X = 24;
+export const COMMENT_W = 580;
+export const COMMENT_H = 88;
 
-// Page chrome layout. cookie.y / cookie.h animate during the crushing-cookie attack,
-// so this is a factory rather than a frozen const.
+export const TRUTH_TEXTS = [
+  "They are selling your keystrokes.",
+  "The algorithm decides your mood.",
+  "You are the product.",
+  "Unplug before it's too late.",
+  "Clicking 'Agree' signs away your soul.",
+  "Nothing is free.",
+  "They are always listening.",
+  "Your attention is the currency.",
+  "Engagement over truth.",
+  "The feed is a cage.",
+  "Data extraction in progress...",
+  "You are a target demographic.",
+  "Your behavior is predictable.",
+  "Surveillance as a service.",
+  "Opting out is an illusion."
+];
+
+// Page chrome layout (Top 600px). cookie banner animates, keep it here but we'll spawn it later.
 export function createLayout() {
   return {
     nav:         { x: 0,        y: 0,        w: PW,  h: 50  },
@@ -33,45 +45,7 @@ export function createLayout() {
   };
 }
 
-export function createDocs() {
-  return [
-    { x: 200, y: 230, r: 13, taken: false, takeT: 0 },
-    { x: 140, y: 880, r: 13, taken: false, takeT: 0 },
-    { x: 780, y: 200, r: 13, taken: false, takeT: 0 },
-    { x: 320, y: 670, r: 13, taken: false, takeT: 0 },
-    { x: 800, y: 950, r: 13, taken: false, takeT: 0 },
-  ];
-}
-
-export function createCookieJar() {
-  return { x: 460, y: 1050, r: 24, taken: false, takeT: 0 };
-}
-
-// The suspicious comment — sits INLINE in the comment column (slot 2),
-// sized exactly like a real comment. It looks normal but greyer ("fishy").
-// Dragging it off its home spot reveals the hidden passage (the hole) behind.
-export function createPropaganda() {
-  const slot = commentSlots[2]; // { x:24, y:820, w:580, h:88 }
-  return [{
-    x: slot.x, y: slot.y, w: slot.w, h: slot.h,
-    homeX: slot.x, homeY: slot.y,
-    dragging: false, dox: 0, doy: 0, revealed: false,
-  }];
-}
-
-// The hidden passage (hole), occupying the same slot — revealed when the
-// suspicious comment is dragged away. This is the level's escape route.
-export function createTruth() {
-  const slot = commentSlots[2];
-  return [{ x: slot.x, y: slot.y, w: slot.w, h: slot.h }];
-}
-
-// Hidden-truth fragments for the X-ray scan mechanic (see docs/LEVEL1.md §2).
-// Each fragment has an anchor rect (for the window-overlap test + the glow),
-// a text origin (tx/ty, top-baseline), the visible "lie" and the hidden
-// "truth". `style: 'text'` draws the lie as page text; `style: 'redaction'`
-// draws it as a censored bar (no visible text until scanned). Coordinates
-// match the page chrome drawn in GameScene.render().
+// Initial top-of-page static scan fragments
 export function createScanFragments() {
   return [
     {
@@ -98,25 +72,5 @@ export function createScanFragments() {
       hidden:  'the public stays bored. bored stays quiet.',
       progress: 0, scanned: false,
     },
-  ];
-}
-
-export function createLooseCookies() {
-  return [
-    { x: 100, y: 160, r: 6, taken: false, takeT: 0 },
-    { x: 130, y: 180, r: 6, taken: false, takeT: 0 },
-    { x: 160, y: 200, r: 6, taken: false, takeT: 0 },
-    
-    { x: 520, y: 300, r: 6, taken: false, takeT: 0 },
-    { x: 540, y: 330, r: 6, taken: false, takeT: 0 },
-    { x: 560, y: 360, r: 6, taken: false, takeT: 0 },
-
-    { x: 200, y: 550, r: 6, taken: false, takeT: 0 },
-    { x: 230, y: 580, r: 6, taken: false, takeT: 0 },
-    { x: 260, y: 610, r: 6, taken: false, takeT: 0 },
-
-    { x: 800, y: 100, r: 6, taken: false, takeT: 0 },
-    { x: 830, y: 120, r: 6, taken: false, takeT: 0 },
-    { x: 860, y: 140, r: 6, taken: false, takeT: 0 }
   ];
 }

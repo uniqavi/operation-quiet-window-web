@@ -154,9 +154,9 @@ function startFade(trackName, fromVol, toVol, durationMs, onDone, secondary) {
   // Cancel any prior fade for this track
   if (activeFades[trackName]) cancelAnimationFrame(activeFades[trackName]);
   const tick = (now) => {
-    const t = Math.min(1, (now - startT) / durationMs);
+    const t = Math.max(0, Math.min(1, (now - startT) / durationMs));
     const v = fromVol + (toVol - fromVol) * t;
-    el.volume = muted ? 0 : v * masterVolume;
+    el.volume = Math.max(0, Math.min(1, muted ? 0 : v * masterVolume));
     if (t < 1) {
       activeFades[trackName] = requestAnimationFrame(tick);
     } else {

@@ -2,7 +2,7 @@
 // the player. After ~7s they return. Phaser-free.
 
 import { AGENTS, DAMAGE } from '../../config.js';
-import { recSlots } from '../layout.js';
+
 import { aabb, dist, playerBox } from '../physics.js';
 import { beep } from '../audio.js';
 import { drawRecCard } from '../draw.js';
@@ -17,7 +17,8 @@ export function updateAll(agents, dt, state) {
 function update(a, dt, state) {
   const p = state.player;
   if (a.state === 'idle') {
-    const slot = recSlots[a.recIdx];
+    const slot = state.dynamicRecs.find(r => r.idx === a.recIdx);
+    if (!slot) return;
     const cx = slot.x + slot.w / 2;
     const cy = slot.y + slot.h / 2;
     if (dist(p.x, p.y, cx, cy) < a.triggerR) {
@@ -56,7 +57,8 @@ function update(a, dt, state) {
       a.life = 0;
     }
   } else if (a.state === 'returning') {
-    const slot = recSlots[a.recIdx];
+    const slot = state.dynamicRecs.find(r => r.idx === a.recIdx);
+    if (!slot) return;
     a.x += (slot.x - a.x) * Math.min(1, dt * 3);
     a.y += (slot.y - a.y) * Math.min(1, dt * 3);
     if (dist(a.x, a.y, slot.x, slot.y) < 5) {
