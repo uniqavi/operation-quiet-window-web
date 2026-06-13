@@ -49,9 +49,22 @@ function update(a, dt, state) {
     a.vy *= T.damping;
     a.x += a.vx * dt;
     a.y += a.vy * dt;
-    if (aabb(playerBox(p), a)) {
-      damagePlayer(state, DAMAGE.chasingRec, (p.x - cx) / d * T.knockMag, (p.y - cy) / d * T.knockMag);
+
+    const pbx = p.x - p.size / 2;
+    const pby = p.y - p.size * 0.375;
+    const pbw = p.size;
+    const pbh = p.size * 0.75;
+        
+    // Rect-Rect collision
+    if (pbx < a.x + a.w && pbx + pbw > a.x && pby < a.y + a.h && pby + pbh > a.y) {
+      const dx = p.x - (a.x + a.w / 2);
+      const dy = p.y - (a.y + a.h / 2);
+      const len = Math.hypot(dx, dy) || 1;
+      damagePlayer(state, DAMAGE.chasingRec, (dx / len) * T.knockMag, (dy / len) * T.knockMag);
+      a.state = 'idle'; // "consumes" the agent after it hits
+      noise(0.2, 0.1);
     }
+
     if (a.life > T.chaseDuration) {
       a.state = 'returning';
       a.life = 0;

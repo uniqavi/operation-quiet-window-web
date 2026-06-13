@@ -87,7 +87,7 @@ export const AGENTS = {
   chasingRecs: {
     // Bumped from 180 — playtest: enemies felt dead until you were right on
     // them. Now wakes when the player gets within a clear "danger zone."
-    triggerR: 280,
+    triggerR: 200,
     accel: 380,
     damping: 0.93,
     awakenDuration: 0.4,
@@ -96,7 +96,7 @@ export const AGENTS = {
     instances: [{ recIdx: 1 }, { recIdx: 4 }],
   },
   shootingSearch: {
-    triggerR: 220,
+    triggerR: 160,
     chargeDuration: 0.7,
     shotsPerVolley: 5,
     fireInterval: 0.2,
@@ -107,13 +107,13 @@ export const AGENTS = {
   },
   fallingComment: {
     commentIdx: 1,
-    triggerR: 140,
+    triggerR: 100,
     rumbleDuration: 0.8,
     gravity: 1100,
     knockY: 30,
   },
   explodingLike: {
-    triggerR: 90,
+    triggerR: 70,
     chargeDuration: 0.6,
     debrisCount: 14,
     debrisSpeedBase: 200,
@@ -123,7 +123,7 @@ export const AGENTS = {
     cooldownDuration: 5,
   },
   crushingCookie: {
-    triggerR: 250,
+    triggerR: 180,
     crushSpeed: 80,
     knockY: -50,
   },
@@ -133,7 +133,7 @@ export const AGENTS = {
     // Bumped from 350 — the avatar should clock you "as you enter the room,"
     // not only when you're standing next to it. awakenDuration also tightened
     // (0.7→0.45) so the threat reads sooner.
-    triggerR: 480,
+    triggerR: 350,
     awakenDuration: 0.45,
     aimDuration: 1.6,
     rotateSpeed: 60 * Math.PI / 180,

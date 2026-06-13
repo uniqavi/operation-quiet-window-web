@@ -4,7 +4,7 @@
 
 import { PH, AGENTS, DAMAGE } from '../../config.js';
 
-import { aabb, playerBox, dist } from '../physics.js';
+import { dist, aabb, playerBox } from '../physics.js';
 import { beep, noise } from '../audio.js';
 import { drawComment } from '../draw.js';
 import { damagePlayer } from '../combat.js';
