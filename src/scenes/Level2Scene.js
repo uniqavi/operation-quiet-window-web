@@ -139,7 +139,7 @@ export default class Level2Scene extends Phaser.Scene {
     crossfadeTo('menu', { fadeMs: 800 });
     document.body.classList.add('menu-mode');
     this.scene.stop();
-    this.scene.start('MenuScene');
+    this.scene.start('DesktopScene');
   }
 
   update(_time, deltaMs) {

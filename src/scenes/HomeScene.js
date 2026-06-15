@@ -305,7 +305,7 @@ export default class HomeScene extends Phaser.Scene {
     resetPauseMenu();
     document.body.classList.add('menu-mode');
     this.scene.stop();
-    this.scene.start('MenuScene');
+    this.scene.start('DesktopScene');
   }
 
   update(_t, dms) {

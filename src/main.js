@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import BootScene from './scenes/BootScene.js';
-import MenuScene from './scenes/MenuScene.js';
+import DesktopScene from './scenes/DesktopScene.js';
 import TutorialScene from './scenes/TutorialScene.js';
 import HomeScene from './scenes/HomeScene.js';
 import GameScene from './scenes/GameScene.js';
@@ -11,7 +11,7 @@ const config = {
   type: Phaser.AUTO,
   parent: 'game',
   backgroundColor: '#181818',
-  scene: [BootScene, MenuScene, TutorialScene, HomeScene, GameScene, Level2Scene, HUDScene],
+  scene: [BootScene, DesktopScene, TutorialScene, HomeScene, GameScene, Level2Scene, HUDScene],
   scale: {
     mode: Phaser.Scale.RESIZE,
     width: '100%',

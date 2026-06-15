@@ -443,7 +443,7 @@ export default class GameScene extends Phaser.Scene {
     document.body.classList.add('menu-mode');
     crossfadeTo('menu', { fadeMs: 800 });
     this.scene.stop('HUDScene');
-    this.scene.start('MenuScene');
+    this.scene.start('DesktopScene');
   }
   resetResultsUI() {
     if (this.revealTimers) this.revealTimers.forEach(clearTimeout);
